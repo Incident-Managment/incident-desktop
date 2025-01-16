@@ -1,0 +1,155 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f0f2f5;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+}
+
+.login-form-container {
+  width: 50%;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-header {
+  margin-bottom: 4rem;
+}
+
+.login-header div {
+  width: 8rem;
+  height: 2rem;
+  background: linear-gradient(to right, #1e3a8a, #2563eb);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-content {
+  max-width: 24rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #111827, #374151);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.login-text {
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+.login-form {
+  margin-bottom: 1.5rem;
+}
+
+.login-button {
+  width: 100%;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to right, #1e3a8a, #2563eb);
+  border-color: transparent;
+  color: white;
+  font-weight: medium;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.login-footer-text {
+  color: #6b7280;
+}
+
+.login-footer-link {
+  color: #2563eb;
+  font-weight: medium;
+}
+
+.login-background {
+  width: 50%;
+  background: linear-gradient(to bottom right, #ebf8ff, #e0f2fe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-background-inner {
+  position: relative;
+}
+
+.login-background-blur {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(30, 58, 138, 0.2), rgba(139, 92, 246, 0.2));
+  border-radius: 50%;
+  filter: blur(3rem);
+}
+
+.login-background-content {
+  position: relative;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(1rem);
+  border-radius: 50%;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-background-icon {
+  width: 12rem;
+  height: 12rem;
+  background: linear-gradient(to bottom right, #ebf8ff, #e0f2fe);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-background-icon svg {
+  font-size: 6rem;
+  color: #60a5fa;
+}
+
+.login-background-blur-top-right {
+  position: absolute;
+  top: 25%;
+  right: 25%;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(96, 165, 250, 0.1);
+  border-radius: 50%;
+  filter: blur(3rem);
+}
+
+.login-background-blur-bottom-left {
+  position: absolute;
+  bottom: 25%;
+  left: 25%;
+  width: 18rem;
+  height: 18rem;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 50%;
+  filter: blur(3rem);
+}
