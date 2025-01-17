@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import { login } from '../services/users.services';
 
-const useLogin = () => {
+const useLogin = (onLoginSuccess) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [user, setUser] = useState(null);
 
   const handleLogin = async (email, password) => {
     setLoading(true);
     setError(null);
     try {
       const userData = await login(email, password);
-      setUser(userData);
+      onLoginSuccess(userData); // Llama a la función de callback con los datos del usuario
     } catch (err) {
       setError(err.message);
     } finally {
@@ -20,7 +19,6 @@ const useLogin = () => {
   };
 
   return {
-    user,
     loading,
     error,
     handleLogin,

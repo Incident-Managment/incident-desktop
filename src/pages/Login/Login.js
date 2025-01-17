@@ -10,8 +10,8 @@ const { Title, Text, Link } = Typography;
 
 const Login = () => {
   const [form] = Form.useForm();
-  const { loading, error, handleLogin } = useLogin();
-  useContext(UserContext);
+  const { loginUser } = useContext(UserContext);
+  const { loading, error, handleLogin } = useLogin(loginUser);
 
   const onFinish = async (values) => {
     await handleLogin(values.email, values.password);
