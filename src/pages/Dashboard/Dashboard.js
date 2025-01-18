@@ -27,7 +27,7 @@ const Dashboard = () => {
   return (
           <div>
             <Title level={3} style={{ marginBottom: 16, color: '#555' }}>
-              Dashboard Overview
+              Dashboard & Estadisticas
             </Title>
             <Row gutter={[16, 16]}>
               <Col span={6}>

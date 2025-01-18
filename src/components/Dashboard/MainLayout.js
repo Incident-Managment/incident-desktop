@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Avatar, Typography } from 'antd';
 import { User } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
@@ -10,6 +10,17 @@ const { Title } = Typography;
 
 const MainLayout = () => {
   const [selectedMenu, setSelectedMenu] = useState('1');
+  const [companyName, setCompanyName] = useState('');
+
+  useEffect(() => {
+    const cachedUser = localStorage.getItem('user');
+    if (cachedUser) {
+      const parsedUser = JSON.parse(cachedUser);
+      if (parsedUser.user && parsedUser.user.company && parsedUser.user.company.name) {
+        setCompanyName(parsedUser.user.company.name);
+      }
+    }
+  }, []);
 
   return (
     <Layout style={{ minHeight: '100vh', background: '#f0f2f5' }}>
@@ -35,8 +46,8 @@ const MainLayout = () => {
             boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Title level={4} style={{ margin: 0 }}>
-            Professional Dashboard
+          <Title level={6} style={{ margin: 0 }}>
+            {companyName}
           </Title>
           <Avatar size={40} style={{ backgroundColor: '#87d068' }} icon={<User />} />
         </Header>
