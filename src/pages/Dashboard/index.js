@@ -4,7 +4,8 @@ import Dashboard from './Dashboard';
 import IncidentsPage from './Incident';
 import UserProfile from './UserProfile';
 import MainLayout from '../../components/Dashboard/MainLayout';
-
+import UserManagment from './UsersManagment';
+import Production from './Production';
 const DashboardRoutes = () => {
   return (
       <Routes>
@@ -12,6 +13,9 @@ const DashboardRoutes = () => {
           <Route index element={<Dashboard />} />
           <Route path="incidents" element={<IncidentsPage />} />
           <Route path="user-profile" element={<UserProfile />} />
+          <Route path="users-managment" element={<UserManagment />} />
+          <Route path="production" element={<Production />} />
+          <Route path="settings" element={<div>settings</div>} />
         </Route>
       </Routes>
   );

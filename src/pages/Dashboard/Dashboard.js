@@ -21,7 +21,7 @@ const Dashboard = () => {
       { id: 2, name: 'Ensamblaje de Componentes', progress: 50 },
       { id: 3, name: 'Inspección de Calidad', progress: 25 },
       { id: 4, name: 'Empaque y Almacenaje', progress: 10 },
-    ]);
+    ]);    
   }, []);
 
   return (
