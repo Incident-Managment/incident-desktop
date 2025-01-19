@@ -1,4 +1,4 @@
-import { fetchData, postData } from "../config/api";
+import { fetchData } from "../config/api";
 
 export const getIncidentsByCompany = async (companyId) => {
     try {

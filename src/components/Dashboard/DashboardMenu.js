@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { Home, AlertCircle, BarChart2, Users, Settings } from 'lucide-react';
+import { Home, AlertCircle, BarChart2, Users, Settings, UserCog } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
@@ -22,11 +22,16 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
     },
     {
       key: '4',
-      icon: <Users size={20} />,
-      label: <Link to="/dashboard/user-profile">Users</Link>,
+      icon: <UserCog size={20} />,
+      label: <Link to="/dashboard/users-managment">Users Managment</Link>,
     },
     {
       key: '5',
+      icon: <Users size={20} />,
+      label: <Link to="/dashboard/user-profile">Profile</Link>,
+    },
+    {
+      key: '6',
       icon: <Settings size={20} />,
       label: <Link to="/dashboard/settings">Settings</Link>,
     },
