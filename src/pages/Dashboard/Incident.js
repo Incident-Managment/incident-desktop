@@ -6,7 +6,6 @@ import { getIncidentsByCompany, getIncidentStatusHistory } from '../../services/
 
 const { Title, Text } = Typography;
 
-// Función para obtener el color de la prioridad
 const getPriorityColor = (priority) => {
   switch (priority) {
     case 'Alta':
@@ -18,7 +17,6 @@ const getPriorityColor = (priority) => {
   }
 };
 
-// Función para obtener el color del estado
 const getStatusColor = (status) => {
   switch (status) {
     case 'En Espera':
@@ -95,7 +93,7 @@ export default function Incidents() {
   };
   
   return (
-    <div style={{ minHeight: '100vh', padding: '2rem' }}>
+    <div style={{ minHeight: '100vh' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <Title level={2} style={{ marginBottom: '2rem' }}>Incidencias</Title>
         <Row gutter={[16, 16]} style={{ display: 'flex', flexWrap: 'wrap' }}>

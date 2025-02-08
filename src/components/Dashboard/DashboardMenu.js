@@ -21,7 +21,7 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
       label: <Link to="/dashboard/production">Production</Link>,
     },
     {
-      key: '6',
+      key: '7',
       icon: <Cog size={20} />,
       label: <Link to="/dashboard/company-machines">Machines</Link>,
     },
