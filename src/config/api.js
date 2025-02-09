@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = process.env.VITE_API_URL;
-
-console.log('Base URL:', baseURL);
+export const baseURL = 'https://back.incidentstream.cloud/api/';
 
 export const fetchData = async (endpoint) => {
   try {
