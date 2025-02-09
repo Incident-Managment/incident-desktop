@@ -22,7 +22,7 @@ export const login = async (email, password) => {
 
 export const getUserById = async (id) => {
     try {
-        const user = await fetchData(`/api/users/getUserById/${id}`);
+        const user = await fetchData(`users/getUserById/${id}`);
         return user;
     } catch (error) {
         console.error(`Error fetching user with id ${id}:`, error.message);
