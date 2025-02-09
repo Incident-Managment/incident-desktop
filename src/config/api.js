@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = process.env.VITE_API_URL || 'http://localhost:3000/api/';
+export const baseURL = process.env.VITE_API_URL;
 
 export const fetchData = async (endpoint) => {
   try {
