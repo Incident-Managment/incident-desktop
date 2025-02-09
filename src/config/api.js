@@ -2,6 +2,8 @@ import axios from 'axios';
 
 export const baseURL = process.env.VITE_API_URL;
 
+console.log('Base URL:', baseURL);
+
 export const fetchData = async (endpoint) => {
   try {
     const response = await axios.get(`${baseURL}${endpoint}`);
