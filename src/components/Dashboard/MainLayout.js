@@ -4,6 +4,7 @@ import { User } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import DashboardMenu from './DashboardMenu';
 import '../../assets/styles/Dashboard/Dashboard.css';
+import Image from '../../assets/images/techsolutions.webp';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -29,10 +30,14 @@ const MainLayout = () => {
           style={{
             height: 64,
             margin: '16px',
-            background: 'rgba(0, 0, 0, 0.5)',
             borderRadius: 8,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
-        />
+        >
+          <img src={Image} alt="Tech Solutions Logo" style={{ width: '75%', height: 'auto', borderRadius: 8 }} />
+        </div>
         <DashboardMenu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
       </Sider>
       <Layout>
@@ -49,7 +54,7 @@ const MainLayout = () => {
           <Title level={6} style={{ margin: 0 }}>
             {companyName}
           </Title>
-          <Avatar size={40} style={{ backgroundColor: '#87d068' }} icon={<User />} />
+          <Avatar size={40} style={{ backgroundColor: '#1890ff' }} icon={<User />} />
         </Header>
         <Content style={{ margin: '24px 16px', background: '#fff', borderRadius: 8, padding: 24 }}>
           <Outlet />

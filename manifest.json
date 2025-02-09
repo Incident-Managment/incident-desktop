@@ -1,14 +1,14 @@
 {
-  "short_name": "App",
-  "name": "My Progressive Web App",
+  "short_name": "Tech Solutions",
+  "name": "Tech Solutions",
   "icons": [
     {
-      "src": "icon-192x192.png",
+      "src": "src/assets/images/techsolutions.webp",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "icon-512x512.png",
+      "src": "src/assets/images/techsolutions.webp",
       "type": "image/png",
       "sizes": "512x512"
     }
