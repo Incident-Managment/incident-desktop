@@ -2,7 +2,7 @@ import { fetchData } from "../config/api";
 
 export const getIncidentsByCompany = async (companyId) => {
     try {
-        const incidentsByCompany = await fetchData(`incidentsByCompany?companyId=${companyId}`);
+        const incidentsByCompany = await fetchData(`incidents/incidentsByCompany?companyId=${companyId}`);
         return incidentsByCompany;
     } catch (error) {
         console.error("Error fetching incidents:", error.message);
