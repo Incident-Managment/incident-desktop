@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+    - name: Build application
+      run: npm run build
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Acceso SSH y despliegue
+      run: |
+        sshpass -p "_HPH24@Assh" ssh -o StrictHostKeyChecking=no root@178.16.142.77 << EOF
+          cd /home/incidentstream/htdocs/incident-desktop
+          git pull origin main
+          npm install
+          npm run build
+        EOF
+      env:
+        SSHPASS: _HPH24@Assh
+      shell: bash
