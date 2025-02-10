@@ -29,3 +29,13 @@ export const getUserById = async (id) => {
         throw error;
     }
 };
+
+export const getechniqueUsersByRoleAndCompany= async (id) => {
+    try {
+        const user = await fetchData(`users/techniqueUsersByRoleAndCompany`);
+        return user;
+    } catch (error) {
+        console.error(`Error fetching user with id ${id}:`, error.message);
+        throw error;
+    }
+};
