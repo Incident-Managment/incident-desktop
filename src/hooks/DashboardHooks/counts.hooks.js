@@ -24,25 +24,33 @@ export const useCountIncidentsByCompany = () => {
   const { data: countData, isLoading: countLoading, error: countError } = useQuery({
     queryKey: ['countIncidents', companyId],
     queryFn: () => getCountIncidentsByCompany(companyId),
-    enabled: !!companyId
+    enabled: !!companyId,
+    staleTime: 30 * 1000, // 30 seconds
+    cacheTime: 30 * 1000, // 30 seconds
   });
 
   const { data: resolvedCountData, isLoading: resolvedCountLoading, error: resolvedCountError } = useQuery({
     queryKey: ['resolvedCountIncidents', companyId],
     queryFn: () => getCountIncidentsResolvedByCompany(companyId),
-    enabled: !!companyId
+    enabled: !!companyId,
+    staleTime: 15 * 1000, // 30 seconds
+    cacheTime: 15 * 1000, // 30 seconds
   });
 
   const { data: averageResolutionTimeData, isLoading: averageResolutionTimeLoading, error: averageResolutionTimeError } = useQuery({
     queryKey: ['averageResolutionTime', companyId],
     queryFn: () => averageResolutionTimeByCompany(companyId),
-    enabled: !!companyId
+    enabled: !!companyId,
+    staleTime: 15 * 1000, // 30 seconds
+    cacheTime: 15 * 1000, // 30 seconds
   });
 
   const { data: incidentEfficiencyData, isLoading: incidentEfficiencyLoading, error: incidentEfficiencyError } = useQuery({
     queryKey: ['incidentEfficiency', companyId],
     queryFn: () => incidentEfficiencyByCompany(companyId),
-    enabled: !!companyId
+    enabled: !!companyId,
+    staleTime: 15 * 1000, // 30 seconds
+    cacheTime: 15 * 1000, // 30 seconds
   });
 
   return {

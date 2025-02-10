@@ -1,8 +1,9 @@
 import React from 'react';
-import { Card, Typography, Row, Col, Space, Tag, Drawer, List } from 'antd';
+import { Card, Typography, Row, Col, Space, Tag, Drawer, List, Button } from 'antd';
 import { formatDistanceToNow } from 'date-fns';
 import { AlertCircle, CheckCircle2, Clock, Cog, FileText, HardDrive, User } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
+import AssignTaskPopover from '../../components/Dashboard/Options';
 
 const { Title, Text } = Typography;
 
@@ -107,6 +108,13 @@ export default function Incidents() {
                       </Text>
                     </Space>
                   </Row>
+                  {incident.assigned_task ? (
+                    <Text type="secondary">Tarea asignada a: {incident.assigned_task.assigned_user_id}</Text>
+                  ) : (
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <AssignTaskPopover incidentId={incident.id} companyId={incident.company_id} />
+                    </div>
+                  )}
                 </Space>
               </Card>
             </Col>

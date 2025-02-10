@@ -1,48 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { getIncidentsByCompany, getIncidentStatusHistory } from '../../services/incident.services';
 
 export const useIncidents = () => {
-  const [incidents, setIncidents] = useState([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [statusHistory, setStatusHistory] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
 
-  useEffect(() => {
-    const fetchIncidents = async () => {
-      try {
-        const cachedUser = localStorage.getItem('user');
-        if (!cachedUser) {
-          throw new Error('User data not found in cache');
-        }
-        const parsedUser = JSON.parse(cachedUser);
-        if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id) {
-          throw new Error('Invalid company data in cache');
-        }
-        const companyId = parsedUser.user.company.id;
-        console.log(`Fetching incidents for company ID: ${companyId}`);
-        const response = await getIncidentsByCompany(companyId);
-        const mappedIncidents = response.map((incident) => ({
-          id: incident.id,
-          title: incident.title,
-          description: incident.description,
-          status: incident.status.name,
-          priority: incident.priority.name,
-          category: incident.category.name,
-          user: incident.user.name,
-          machine: incident.machine.name,
-          production_phase: incident.production_phase.name,
-          creation_date: incident.creation_date,
-          update_date: incident.update_date,
-          assigned_tasks: incident.assigned_tasks,
-        }));
-        setIncidents(mappedIncidents);
-      } catch (error) {
-        console.error('Error fetching incidents:', error);
-      }
-    };
+  const fetchIncidents = async () => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      throw new Error('User data not found in cache');
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id) {
+      throw new Error('Invalid company data in cache');
+    }
+    const companyId = parsedUser.user.company.id;
+    const response = await getIncidentsByCompany(companyId);
+    return response.map((incident) => ({
+      id: incident.id,
+      title: incident.title,
+      description: incident.description,
+      status: incident.status.name,
+      priority: incident.priority.name,
+      category: incident.category.name,
+      user: incident.user.name,
+      machine: incident.machine.name,
+      production_phase: incident.production_phase.name,
+      creation_date: incident.creation_date,
+      update_date: incident.update_date,
+      assigned_task: incident.assigned_task,
+      company: incident.company.name,
+    }));
+  };
 
-    fetchIncidents();
-  }, []);
+  const { data: incidents = [], error, isLoading } = useQuery({
+    queryKey: ['incidents'],
+    queryFn: fetchIncidents,
+  });
 
   const handleIncidentClick = async (incidentId) => {
     try {
@@ -68,5 +64,7 @@ export const useIncidents = () => {
     selectedIncident,
     handleIncidentClick,
     closeDrawer,
+    error,
+    isLoading,
   };
 };
