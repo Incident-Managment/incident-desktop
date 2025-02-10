@@ -17,7 +17,7 @@ const AssignTaskPopover = ({ incidentId }) => {
     const { mutate: assignTask, isLoading } = useAssignedTasks();
     const cachedUser = JSON.parse(localStorage.getItem('user'));
     const companyId = cachedUser?.user?.company?.id;
-    const { users: technicians, error, isLoading: isLoadingTechnicians } = useTechniqueUsers(companyId);
+    const { users: technicians, isLoading: isLoadingTechnicians } = useTechniqueUsers(companyId);
 
     const handleAssignTask = (values) => {
         const { assigned_user_id } = values;

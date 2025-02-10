@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Circle } from "lucide-react";
-import { Card, Typography, Button, Input, Switch, message } from "antd";
+import { Card, Typography, Button, Input, Switch } from "antd";
 import styled from "styled-components";
 import { useProductionPhases } from "../../hooks/ProductionHooks/production.hooks";
 

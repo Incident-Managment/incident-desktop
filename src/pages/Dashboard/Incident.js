@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Typography, Row, Col, Space, Tag, Drawer, List, Button } from 'antd';
+import { Card, Typography, Row, Col, Space, Tag, Drawer, List } from 'antd';
 import { formatDistanceToNow } from 'date-fns';
 import { AlertCircle, CheckCircle2, Clock, Cog, FileText, HardDrive, User } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
@@ -36,7 +36,6 @@ export default function Incidents() {
     incidents,
     drawerVisible,
     statusHistory,
-    selectedIncident,
     handleIncidentClick,
     closeDrawer,
   } = useIncidents();
