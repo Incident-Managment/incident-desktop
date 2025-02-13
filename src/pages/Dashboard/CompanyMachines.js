@@ -1,118 +1,110 @@
 "use client"
 
-import { useState, useEffect } from "react";
-import { Card, Typography, Row, Col, Space, Tag, Spin, Modal, Tooltip } from "antd";
-import { HardDrive, QrCode } from "lucide-react";
-import { getMachinesByCompany, getMachinesByType } from "../../services/company.machines";
-import QRCode from "react-qr-code";
+import { useState } from "react"
+import { Typography, List, Card, Spin, Result, Space, Tag, Modal, Button, Tooltip } from "antd"
+import { useMachinesByCompany } from "../../hooks/MachinesHooks/companyMachines.hooks"
+import QRCode from "react-qr-code"
 
-const { Title, Text } = Typography;
+const { Title, Text } = Typography
 
-const getMachineCategoryColor = (category) => {
-  switch (category) {
-    case "Manufactura":
-      return "blue";
-    case "Mantenimiento":
-      return "green";
-    default:
-      return "gray";
-  }
-};
+const CompanyMachines = () => {
+  const { data: machines, isLoading, error } = useMachinesByCompany()
+  const [selectedMachine, setSelectedMachine] = useState(null)
 
-const Machines = ({ companyId, typeId }) => {
-  const [machines, setMachines] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isQRModalVisible, setIsQRModalVisible] = useState(false);
-  const [selectedMachineId, setSelectedMachineId] = useState(null);
-
-  useEffect(() => {
-    const fetchMachines = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = companyId ? await getMachinesByCompany(companyId) : await getMachinesByType(typeId);
-        setMachines(result);
-      } catch (err) {
-        setError("Error al cargar las máquinas");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMachines();
-  }, [companyId, typeId]);
-
-  const showQRModal = (machineId) => {
-    setSelectedMachineId(machineId);
-    setIsQRModalVisible(true);
-  };
-
-  const handleQRModalCancel = () => {
-    setIsQRModalVisible(false);
-    setSelectedMachineId(null);
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <div className="flex justify-center items-center h-screen">
         <Spin size="large" />
       </div>
-    );
+    )
   }
 
   if (error) {
-    return <div style={{ textAlign: "center", padding: "2rem" }}>{error}</div>;
+    return (
+      <Result
+        status="error"
+        title="Error loading machines"
+        subTitle="Please try again later or contact support if the problem persists."
+      />
+    )
+  }
+
+  const handleMachineClick = (machine) => {
+    setSelectedMachine(machine)
+  }
+
+  const closeModal = () => {
+    setSelectedMachine(null)
+  }
+
+  const getStatusColor = (id) => {
+    const colors = ["green", "blue", "orange", "red", "purple"]
+    return colors[id % colors.length]
   }
 
   return (
-    <div style={{ minHeight: "100vh", padding: "4rem", backgroundColor: "#f9f9f9" }}>
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <Title level={2} style={{ marginBottom: "2rem", textAlign: "center" }}>Máquinas</Title>
-        <Row gutter={[24, 24]}>
-          {machines.map((machine) => (
-            <Col xs={24} sm={12} lg={8} key={machine.id}>
-              <Card
-                hoverable
-                style={{ borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}
-                actions={[
-                  <Tooltip key={machine.id} title="Ver código QR">
-                    <QrCode size={22} onClick={() => showQRModal(machine.id)} style={{ cursor: "pointer" }} />
-                  </Tooltip>,
-                ]}
-              >
-                <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-                  <Tag color={getMachineCategoryColor(machine.category)}>{machine.category}</Tag>
-                  <Title level={4}>{machine.name}</Title>
-                  <Text type="secondary" style={{ display: "block", marginBottom: "1rem" }}>
-                    {machine.description}
-                  </Text>
-                  <Row gutter={[16, 16]}>
-                    <Col span={12}>
-                      <Space>
-                        <HardDrive size={16} />
-                        <Text type="secondary">{machine.type?.name}</Text>
-                      </Space>
-                    </Col>
-                  </Row>
-                </Space>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </div>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <Title level={2} className="mb-6 text-center">
+        Company Machines
+      </Title>
+      <List
+        grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
+        dataSource={machines}
+        renderItem={(machine) => (
+          <List.Item>
+            <Card
+              hoverable
+              className="w-full shadow-md transition-all duration-300 hover:shadow-xl"
+              onClick={() => handleMachineClick(machine)}
+            >
+              <Card.Meta
+                title={
+                  <Space>
+                    <Text strong>{machine.name}</Text>
+                    <Tooltip title={`Status: ${getStatusColor(machine.id)}`}>
+                      <div className={`w-3 h-3 rounded-full bg-${getStatusColor(machine.id)}-500`} />
+                    </Tooltip>
+                  </Space>
+                }
+                description={
+                  <Space direction="vertical" className="w-full">
+                    <Tag color="blue">{machine.type.name}</Tag>
+                    <Text type="secondary">ID: {machine.id}</Text>
+                    <Text type="secondary" className="truncate">
+                      Company: {machine.company.name}
+                    </Text>
+                  </Space>
+                }
+              />
+            </Card>
+          </List.Item>
+        )}
+      />
       <Modal
-        title="Código QR de la Máquina"
-        open={isQRModalVisible}
-        onCancel={handleQRModalCancel}
-        footer={null}
+        title={selectedMachine?.name}
+        visible={!!selectedMachine}
+        onCancel={closeModal}
+        footer={[
+          <Button key="close" onClick={closeModal} type="primary">
+            Close
+          </Button>,
+        ]}
         centered
+        bodyStyle={{ padding: '20px' }}
       >
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "20px" }}>
-          <QRCode value={`https://yourdomain.com/machines/${selectedMachineId}`} size={256} />
-        </div>
+        {selectedMachine && (
+          <Space direction="vertical" className="w-full" size="large">
+            <Text strong>Type: {selectedMachine.type.name}</Text>
+            <Text>ID: {selectedMachine.id}</Text>
+            <Text>Company: {selectedMachine.company.name}</Text>
+            <div className="flex justify-center mt-4">
+              <QRCode value={selectedMachine.id} size={256} />
+            </div>
+          </Space>
+        )}
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default Machines;
+export default CompanyMachines

@@ -66,7 +66,7 @@ const Dashboard = () => {
           <Card style={cardStyle} bodyStyle={cardContentStyle} hoverable>
             <Statistic
               title={<Text strong>Average Resolution Time</Text>}
-              value={loading ? 'Loading...' : error ? 'Error' : averageResolutionTime}
+              value={loading ? 'Loading...' : error ? 'Error' : averageResolutionTime.toFixed(2)}
               suffix="hours"
               prefix={<Clock size={24} style={{ marginRight: '8px', color: '#faad14' }} />}
               valueStyle={{ color: '#262626' }}
@@ -77,7 +77,7 @@ const Dashboard = () => {
           <Card style={cardStyle} bodyStyle={cardContentStyle} hoverable>
             <Statistic
               title={<Text strong>Production Efficiency</Text>}
-              value={loading ? 'Loading...' : error ? 'Error' : incidentEfficiency}
+              value={loading ? 'Loading...' : error ? 'Error' : incidentEfficiency.toFixed(2)}
               suffix="%"
               prefix={<Activity size={24} style={{ marginRight: '8px', color: '#722ed1' }} />}
               valueStyle={{ color: '#262626' }}
@@ -85,7 +85,6 @@ const Dashboard = () => {
           </Card>
         </Col>
       </Row>
-
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col span={12}>
