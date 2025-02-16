@@ -98,7 +98,7 @@ const CompanyMachines = () => {
             <Text>ID: {selectedMachine.id}</Text>
             <Text>Company: {selectedMachine.company.name}</Text>
             <div className="flex justify-center mt-4">
-              <QRCode value={selectedMachine.id} size={256} />
+              <QRCode value={String(selectedMachine.id)} size={256} />
             </div>
           </Space>
         )}
