@@ -150,7 +150,7 @@ export default function Incidents() {
                       <br />
                       <Text type="secondary">{`Actualizado por: ${item.user.name}`}</Text>
                       <br />
-                      <Text type="secondary">{formatDistanceToNow(new Date(item.update_date), { addSuffix: true })}</Text>
+                      <Text type="secondary">{formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}</Text>
                     </>
                   }
                 />
