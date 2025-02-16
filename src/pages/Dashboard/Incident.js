@@ -108,15 +108,17 @@ export default function Incidents() {
                         {formatDistanceToNow(new Date(incident.update_date), { addSuffix: true })}
                       </Text>
                     </Space>
-                  </Row>
-                  {incident.assigned_task ? (
-                    <Text type="secondary">Tarea asignada a: {incident.assigned_task.assigned_user_id}</Text>
-                  ) : (
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <AssignTaskPopover incidentId={incident.id} companyId={incident.company_id} />
-                    </div>
-                  )}
-                </Space>
+                    </Row>
+                    {incident.assigned_task ? (
+                      <Text type="secondary">Tarea asignada a: {incident.assigned_task.assigned_user_id}</Text>
+                    ) : (
+                      incident.status === 'En Espera' && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <AssignTaskPopover incidentId={incident.id} companyId={incident.company_id} />
+                        </div>
+                      )
+                    )}
+                    </Space>
               </Card>
             </Col>
           ))}
