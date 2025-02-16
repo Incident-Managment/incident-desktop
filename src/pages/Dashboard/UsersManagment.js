@@ -1,83 +1,148 @@
-import React from 'react';
-import { Typography, Card } from 'antd';
+import React, { useState } from 'react';
+import { Typography, Table, Button, Card, Space, Input } from 'antd';
+import { Plus, MoreHorizontal } from 'lucide-react';
+import { useGetUsers } from '../../hooks/UsersHooks/users.hooks';
+import CreateUserModal from '../../components/Users/createUsers'; // Import the modal
+import { formatDate } from '../../utils/date-format';
+const { Title } = Typography;
 
-const { Title, Paragraph } = Typography;
+const UserManagement = () => {
+  const { data: users, isLoading, error } = useGetUsers();
+  const [searchText, setSearchText] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
-const UserManagment = () => {
-    return (
-        <Card style={{ maxWidth: 800, margin: '20px auto', padding: 20 }}>
-            <Title level={3}>Instrucciones para el Módulo de Gestión de Usuarios</Title>
-            <Paragraph>
-                <strong>Objetivo:</strong> Crear un módulo que permita la gestion de usuarios y editar únicamente sus datos personales, correo y contraseña. A continuación, se describen los requisitos:
-            </Paragraph>
-            <ol>
-            <li>
-                    <strong>Listado de usuarios:</strong>
-                    <ul>
-                        <li>El módulo debe incluir una tabla o lista que muestre todos los usuarios existentes en la base de datos.</li>
-                        <li>Utilizar la función <code>getUsers</code> ubicada en <code>src/services/getUsers</code> para obtener la lista de usuarios.</li>
-                        <li>Mostrar en la lista al menos los siguientes datos de cada usuario:
-                            <ul>
-                                <li>Nombre completo.</li>
-                                <li>Correo electrónico.</li>
-                                <li>Rol de usuario.</li>
-                                <li>Fecha de creación.</li>
-                            </ul>
-                        </li>
-                        <li>La lista debe ser paginada si hay muchos usuarios.</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Formulario de edición:</strong>
-                    <ul>
-                        <li>Debe contener los siguientes campos:
-                            <ul>
-                                <li>Nombre completo (campo de texto).</li>
-                                <li>Correo electrónico (campo de texto con validación de formato).</li>
-                                <li>Contraseña (campo de texto oculto con validación).</li>
-                            </ul>
-                        </li>
-                        <li>El formulario debe mostrar los datos actuales del usuario.</li>
-                        <li>Validaciones requeridas:
-                            <ul>
-                                <li>El nombre no puede estar vacío.</li>
-                                <li>El correo debe tener un formato válido.</li>
-                                <li>La contraseña debe tener al menos 8 caracteres.</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Restricciones:</strong>
-                    <ul>
-                        <li>El formulario debe permitir editar únicamente los datos del usuario autenticado.</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Interacción con el backend:</strong>
-                    <ul>
-                        <li>Los datos deben enviarse al servidor mediante una solicitud POST o PUT.</li>
-                        <li>Mostrar mensajes de éxito o error según la respuesta del servidor.</li>
-                    </ul>
-                </li>
-                <li>
-                    <strong>Estilo y presentación:</strong>
-                    <ul>
-                        <li>El formulario debe ser claro, fácil de usar y estar bien estructurado.</li>
-                        <li>Usar estilos consistentes con el diseño general de la aplicación.</li>
-                    </ul>
-                </li>
-            </ol>
-            <Paragraph>
-                <strong>Ejemplo de datos del usuario:</strong>
-            </Paragraph>
-            <ul>
-                <li><strong>Nombre:</strong> Javier Valenzuela</li>
-                <li><strong>Correo:</strong> javier.valenzuela@gmail.com</li>
-                <li><strong>Contraseña:</strong> ******** (oculta)</li>
-            </ul>
-        </Card>
-    );
+  const handleSearch = (selectedKeys, confirm) => {
+    confirm();
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`Buscar ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Buscar
+          </Button>
+          <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+            Resetear
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => <span>{filtered ? '🔍' : '🔍'}</span>,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : '',
+  });
+
+  const columns = [
+    {
+      title: 'Nombre Completo',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, record) => (
+        <Space>
+          <div
+            style={{
+              backgroundColor: '#f0f0f0',
+              borderRadius: '50%',
+              width: 32,
+              height: 32,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: 8,
+            }}
+          >
+            {record.name
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .toUpperCase()}
+          </div>
+          <span>{text}</span>
+        </Space>
+      ),
+      ...getColumnSearchProps('name'),
+    },
+    {
+      title: 'Correo Electrónico',
+      dataIndex: 'email',
+      key: 'email',
+      ...getColumnSearchProps('email'),
+    },
+    {
+      title: 'Rol de Usuario',
+      dataIndex: ['role', 'name'],
+      key: 'role',
+      render: (text) => (
+        <span
+          style={{
+            backgroundColor: 'rgba(0, 0, 255, 0.1)',
+            color: 'blue',
+            padding: '2px 8px',
+            borderRadius: '12px',
+            fontSize: '12px',
+          }}
+        >
+          {text}
+        </span>
+      ),
+      ...getColumnSearchProps('role.name'),
+    },
+    {
+      title: 'Fecha de Creación',
+      dataIndex: 'creation_date',
+      key: 'creation_date',
+      render: (text) => formatDate(text),
+      sorter: (a, b) => new Date(a.creation_date) - new Date(b.creation_date),
+    },
+    {
+      title: 'Acciones',
+      key: 'actions',
+      render: (text, record) => <Button icon={<MoreHorizontal size={16} />} />,
+    },
+  ];
+
+  if (isLoading) return <div>Cargando...</div>;
+  if (error) return <div>Error al cargar los datos</div>;
+
+  return (
+    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Title level={2}>Gestión de Usuarios</Title>
+        <Button type="primary" icon={<Plus size={16} />} onClick={() => setIsModalOpen(true)}>
+          Nuevo Usuario
+        </Button>
+      </div>
+      <Table dataSource={users} columns={columns} rowKey="id" pagination={{ pageSize: 10 }} />
+      <CreateUserModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreateUser={(user) => {
+          // Handle user creation logic here
+          setIsModalOpen(false);
+        }}
+      />
+    </Space>
+  );
 };
 
-export default UserManagment;
+export default UserManagement;

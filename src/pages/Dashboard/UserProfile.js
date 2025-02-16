@@ -40,12 +40,30 @@ const UserProfile = () => {
                 <Col span={6}>
                     <Avatar
                         size={100}
-                        src={user.avatar || <UserOutlined />}
                         style={{
-                            border: '4px solid #1890ff',
-                            backgroundColor: '#f0f0f0',
-                        }}
-                    />
+                            border: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',
+                            background: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',                        }}
+                    >
+                        <div
+                            style={{
+                                background: '#0000',
+                                borderRadius: '50%',
+                                width: 32,
+                                height: 32,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: 28,
+                                color: '#fff',
+                            }}
+                        >
+                            {user.name
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .toUpperCase()}
+                        </div>
+                    </Avatar>
                 </Col>
                 <Col span={18}>
                     <Title level={2} style={{ marginBottom: 5 }}>

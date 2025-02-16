@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Typography, Row, Col, Space, Tag, Drawer, List } from 'antd';
+import React, { useState } from 'react';
+import { Card, Typography, Row, Col, Space, Tag, Drawer, List, Pagination } from 'antd';
 import { formatDistanceToNow } from 'date-fns';
 import { AlertCircle, CheckCircle2, Clock, Cog, FileText, HardDrive, User } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
@@ -32,20 +32,22 @@ const getStatusColor = (status) => {
 };
 
 export default function Incidents() {
-  const {
-    incidents,
-    drawerVisible,
-    statusHistory,
-    handleIncidentClick,
-    closeDrawer,
-  } = useIncidents();
+  const { incidents, drawerVisible, statusHistory, handleIncidentClick, closeDrawer } = useIncidents();
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const paginatedIncidents = incidents.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div style={{ minHeight: '100vh' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <Title level={2} style={{ marginBottom: '2rem' }}>Incidencias</Title>
         <Row gutter={[16, 16]} style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {incidents.map((incident) => (
+          {paginatedIncidents.map((incident) => (
             <Col xs={24} sm={12} lg={8} key={incident.id} style={{ display: 'flex' }}>
               <Card
                 style={{
@@ -119,6 +121,14 @@ export default function Incidents() {
             </Col>
           ))}
         </Row>
+        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={incidents.length}
+            onChange={handlePageChange}
+          />
+        </div>
         <Drawer
           title="Historial de Estado de la Incidencia"
           placement="right"

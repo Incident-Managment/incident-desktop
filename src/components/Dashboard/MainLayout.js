@@ -1,9 +1,11 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import React, { useState, useEffect } from 'react';
-import { Layout, Avatar, Typography } from 'antd';
+import { Layout, Avatar, Typography, Popover, Button } from 'antd';
 import { User } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import DashboardMenu from './DashboardMenu';
-import '../../assets/styles/Dashboard/Dashboard.css';
+import useUserProfile from '../../hooks/DashboardHooks/UserProfile.hooks';
 import Image from '../../assets/images/techsolutions.webp';
 
 const { Header, Sider, Content } = Layout;
@@ -12,6 +14,7 @@ const { Title } = Typography;
 const MainLayout = () => {
   const [selectedMenu, setSelectedMenu] = useState('1');
   const [companyName, setCompanyName] = useState('');
+  const { user, loading, error } = useUserProfile();
 
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
@@ -23,40 +26,74 @@ const MainLayout = () => {
     }
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.reload();
+  };
+
+  const popoverContent = (
+    <div>
+      <p>{user?.name}</p>
+      <Button type="primary" onClick={handleLogout}>Cerrar Sesion</Button>
+    </div>
+  );
+
   return (
-    <Layout style={{ minHeight: '100vh', background: '#f0f2f5' }}>
+    <Layout css={css`min-height: 100vh; background: #f0f2f5;`}>
       <Sider width={240} theme="light">
         <div
-          style={{
-            height: 64,
-            margin: '16px',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          css={css`
+            height: 64px;
+            margin: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          `}
         >
-          <img src={Image} alt="Tech Solutions Logo" style={{ width: '75%', height: 'auto', borderRadius: 8 }} />
+          <img src={Image} alt="Tech Solutions Logo" css={css`width: 75%; height: auto; border-radius: 8px;`} />
         </div>
         <DashboardMenu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
       </Sider>
       <Layout>
         <Header
-          style={{
-            background: '#fff',
-            padding: '0 24px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
-          }}
+          css={css`
+            background: #fff;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+          `}
         >
-          <Title level={6} style={{ margin: 0 }}>
+          <Title level={6} css={css`margin: 0;`}>
             {companyName}
           </Title>
-          <Avatar size={40} style={{ backgroundColor: '#1890ff' }} icon={<User />} />
+          <Popover content={popoverContent} title="User Info">
+            <Avatar
+              size={40}
+              css={css`background-color: #1890ff; cursor: pointer;`}
+              icon={
+                <div
+                  style={{
+                    borderRadius: '50%',
+                    width: 32,
+                    height: 32,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {user?.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .join('')
+                    .toUpperCase()}
+                </div>
+              }
+            />          </Popover>
         </Header>
-        <Content style={{ margin: '24px 16px', background: '#fff', borderRadius: 8, padding: 24 }}>
+        <Content css={css`margin: 24px 16px; background: #fff; border-radius: 8px; padding: 24px;`}>
           <Outlet />
         </Content>
       </Layout>
