@@ -2,7 +2,7 @@ import { fetchData } from "../config/api";
 
 export const getMachinesByCompany = async (companyId) => {
     try {
-        const machinesByCompany = await fetchData(`machines/getMachinesGlobal?companyId=${companyId}`);
+        const machinesByCompany = await fetchData(`machines/getMachinesByCompany?companyId=${companyId}`);
         return machinesByCompany;
     } catch (error) {
         console.error("Error fetching machines by company:", error.message);

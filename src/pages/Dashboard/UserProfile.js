@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography, Descriptions, Row, Col, Card, Tooltip, Spin, Alert, Avatar, Button } from 'antd';
-import { MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { MailOutlined, PhoneOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
 import useUserProfile from '../../hooks/DashboardHooks/UserProfile.hooks';
-
+import { formatDate } from '../../utils/date-format';
 const { Title, Text } = Typography;
 
 const UserProfile = () => {
@@ -97,14 +97,14 @@ const UserProfile = () => {
                     <Text>{user.phone_number}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
-                    label="Company"
-                >
+                    label={<><ClusterOutlined style={{ marginRight: 8 }} /> Company</>}
+                    >
                     <Text>{user.company.name}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
-                    label="Account Created"
-                >
-                    <Text>{new Date(user.creation_date).toLocaleDateString()}</Text>
+                    label={<><UserOutlined style={{ marginRight: 8 }} /> Account Created</>}
+                    >
+                    <Text>{formatDate(user.creation_date)}</Text>
                 </Descriptions.Item>
             </Descriptions>
 
