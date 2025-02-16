@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Table, Button, Card, Space, Input } from 'antd';
+import { Typography, Table, Button, Space, Input } from 'antd';
 import { Plus, MoreHorizontal } from 'lucide-react';
 import { useGetUsers } from '../../hooks/UsersHooks/users.hooks';
 import CreateUserModal from '../../components/Users/createUsers'; // Import the modal
@@ -8,7 +8,7 @@ const { Title } = Typography;
 
 const UserManagement = () => {
   const { data: users, isLoading, error } = useGetUsers();
-  const [searchText, setSearchText] = useState('');
+  const [setSearchText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const handleSearch = (selectedKeys, confirm) => {

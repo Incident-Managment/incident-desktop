@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Descriptions, Row, Col, Card, Tooltip, Spin, Alert, Avatar, Button } from 'antd';
-import { MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import useUserProfile from '../../hooks/DashboardHooks/UserProfile.hooks';
 
 const { Title, Text } = Typography;

@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout, Avatar, Typography, Popover, Button } from 'antd';
-import { User } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import DashboardMenu from './DashboardMenu';
 import useUserProfile from '../../hooks/DashboardHooks/UserProfile.hooks';
@@ -14,7 +13,7 @@ const { Title } = Typography;
 const MainLayout = () => {
   const [selectedMenu, setSelectedMenu] = useState('1');
   const [companyName, setCompanyName] = useState('');
-  const { user, loading, error } = useUserProfile();
+  const { user } = useUserProfile();
 
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
