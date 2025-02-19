@@ -92,11 +92,11 @@ const Dashboard = () => {
                     title={<Text strong>{item.title}</Text>}
                     description={
                       <Space>
-                        <Tag color={item.status === 'Resuelto' ? 'green' : item.status === 'En Progreso' ? 'blue' : 'gold'}>
-                          {item.status}
+                        <Tag color={item.status.name === 'Resuelto' ? 'green' : item.status.name === 'En Progreso' ? 'blue' : 'gold'}>
+                          {item.status.name}
                         </Tag>
-                        <Tag color={item.priority === 'Alta' ? 'red' : item.priority === 'Media' ? 'orange' : 'blue'}>
-                          {item.priority}
+                        <Tag color={item.priority.name === 'Alta' ? 'red' : item.priority.name === 'Media' ? 'orange' : 'blue'}>
+                          {item.priority.name}
                         </Tag>
                       </Space>
                     }
