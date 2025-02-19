@@ -64,3 +64,12 @@ export const incidentEfficiencyByCompany = async (companyId) => {
     }
 }
 
+export const getRecentIncidentsByCompany = async (companyId) => {
+    try {
+        const countIncidentsByCompany = await fetchData(`incidents/getRecentIncidentsByCompany?companyId=${companyId}`);
+        return countIncidentsByCompany;
+    }catch (error) {
+        console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}

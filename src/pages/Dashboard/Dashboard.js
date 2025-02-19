@@ -5,21 +5,15 @@ import { Typography, Row, Col, Card, Statistic, List, Tag, Progress, Space } fro
 import { AlertCircle, CheckCircle, Clock, Activity } from 'lucide-react';
 import '../../assets/styles/Dashboard/Dashboard.css';
 import { useCountIncidentsByCompany } from '../../hooks/DashboardHooks/counts.hooks';
-
+import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 const { Title, Text } = Typography;
 
 const Dashboard = () => {
-  const [incidents, setIncidents] = useState([]);
   const [productionPhases, setProductionPhases] = useState([]);
   const { count, resolvedCount, averageResolutionTime, incidentEfficiency, loading, error } = useCountIncidentsByCompany();
+  const { recentIncidents } = useIncidents();
 
   useEffect(() => {
-    setIncidents([
-      { id: 1, title: 'Fallo en la máquina de corte', status: 'En Espera', priority: 'Alta' },
-      { id: 2, title: 'Defecto en el ensamblaje de componentes', status: 'En Progreso', priority: 'Media' },
-      { id: 3, title: 'Problema en la inspección de calidad', status: 'Resuelto', priority: 'Baja' },
-    ]);
-
     setProductionPhases([
       { id: 1, name: 'Preparación y Configuración', progress: 75 },
       { id: 2, name: 'Ensamblaje de Componentes', progress: 50 },
@@ -91,7 +85,7 @@ const Dashboard = () => {
           <Card title="Recent Incidents" bordered={false}>
             <List
               itemLayout="horizontal"
-              dataSource={incidents}
+              dataSource={recentIncidents}
               renderItem={(item) => (
                 <List.Item>
                   <List.Item.Meta
