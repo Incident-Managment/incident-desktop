@@ -5,5 +5,6 @@ export const useGetRolesGlobal = () => {
     return useQuery({
         queryKey: ['roles'],
         queryFn: getRolesGlobal,
+        staleTime: Infinity,
     });
 };

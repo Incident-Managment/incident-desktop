@@ -65,7 +65,7 @@ const MainLayout = () => {
             box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
           `}
         >
-          <Title level={6} css={css`margin: 0;`}>
+          <Title level={6} css={css`marginTop: 2;`}>
             {companyName}
           </Title>
           <Popover content={popoverContent} title="User Info">

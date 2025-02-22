@@ -22,7 +22,8 @@ export const useMachinesByCompany = () => {
 
   return useQuery({
     queryKey: ['machinesByCompany'],
-    queryFn: fetchMachines
+    queryFn: fetchMachines,
+    staleTime: Infinity,
   });
 };
 

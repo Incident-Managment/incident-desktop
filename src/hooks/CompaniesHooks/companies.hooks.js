@@ -5,5 +5,6 @@ export const useGetCompaniesGlobal = () => {
     return useQuery({
         queryKey: ['companies'],
         queryFn: getCompaniesGlobal,
+        staleTime: Infinity,
     });
 };

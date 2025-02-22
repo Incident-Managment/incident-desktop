@@ -52,11 +52,13 @@ export const useIncidents = () => {
   const { data: incidents = [], error, isLoading } = useQuery({
     queryKey: ['incidents'],
     queryFn: fetchIncidents,
+    staleTime: Infinity,
   });
 
   const { data: recentIncidents = [], error: recentError, isLoading: recentLoading } = useQuery({
     queryKey: ['recentIncidents'],
     queryFn: fetchRecentIncidents,
+    staleTime: Infinity,
   });
 
   const handleIncidentClick = async (incidentId) => {

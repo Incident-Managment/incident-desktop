@@ -17,6 +17,7 @@ const useUserProfile = () => {
     const { data: user, error, isLoading: loading } = useQuery({
         queryKey: ['userProfile'],
         queryFn: fetchUser,
+        staleTime: Infinity,
     });
 
     return { user, loading, error };

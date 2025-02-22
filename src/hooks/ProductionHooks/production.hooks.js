@@ -14,6 +14,7 @@ export const useProductionPhases = (companyId) => {
     queryKey: ["productionPhases", companyId],
     queryFn: () => getProductionPhasesByCompany(companyId),
     enabled: !!companyId,
+    staleTime: Infinity,
   });
 
   const mutation = useMutation({

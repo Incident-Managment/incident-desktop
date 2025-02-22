@@ -1,43 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Menu } from 'antd';
 import { Home, AlertCircle, BarChart2, Users, Settings, UserCog, Cog } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
-import { getCountIncidentsByCompany, getCountIncidentsResolvedByCompany, averageResolutionTimeByCompany, incidentEfficiencyByCompany } from '../../services/incident.services';
 
 const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
-  const queryClient = useQueryClient();
-  const [hoverTimeout, setHoverTimeout] = useState(null);
-
-  const handleMouseEnter = () => {
-    const cachedUser = localStorage.getItem('user');
-    if (!cachedUser) return;
-    const parsedUser = JSON.parse(cachedUser);
-    const companyId = parsedUser.user?.company?.id;
-    if (!companyId) return;
-
-    setHoverTimeout(setTimeout(() => {
-      queryClient.prefetchQuery(['countIncidents', companyId], () => getCountIncidentsByCompany(companyId));
-      queryClient.prefetchQuery(['resolvedCountIncidents', companyId], () => getCountIncidentsResolvedByCompany(companyId));
-      queryClient.prefetchQuery(['averageResolutionTime', companyId], () => averageResolutionTimeByCompany(companyId));
-      queryClient.prefetchQuery(['incidentEfficiency', companyId], () => incidentEfficiencyByCompany(companyId));
-    }, 500));
-  };
-
-  const handleMouseLeave = () => {
-    if (hoverTimeout) {
-      clearTimeout(hoverTimeout);
-      setHoverTimeout(null);
-    }
-  };
-
   const menuItems = [
     {
       key: '1',
       icon: <Home size={20} />,
       label: <Link to="/dashboard">Dashboard</Link>,
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
     },
     {
       key: '2',
@@ -74,7 +45,6 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
   return (
     <Menu
       mode="inline"
-      defaultSelectedKeys={[selectedMenu]}
       onSelect={({ key }) => setSelectedMenu(key)}
       style={{ borderRight: 0 }}
       items={menuItems}

@@ -9,6 +9,7 @@ const useTechniqueUsers = (id) => {
     const { data: users, error, isLoading } = useQuery({
         queryKey: ['techniqueUsers', id],
         queryFn: fetchTechniqueUsers,
+        staleTime: Infinity,
     });
 
     return { users, error, isLoading };
