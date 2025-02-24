@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { Home, AlertCircle, BarChart2, Users, Settings, UserCog, Cog } from 'lucide-react';
+import { Home, AlertCircle, BarChart2, Users, UserCog, Cog } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {

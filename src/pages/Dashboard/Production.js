@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Circle, ChevronDown, ChevronUp, Settings, Plus } from "lucide-react";
 import { Card, Typography, Button, Input, Switch, List, Collapse, Tooltip, Spin, Select } from "antd";
 import styled from "styled-components";
@@ -103,14 +103,13 @@ export default function ProductionTimelineEnhanced() {
     isLoading,
     machines,
     isLoadingMachines,
-    machinesError,
     selectedMachine,
     setSelectedMachine,
   } = useProductionPhases(companyId);
 
   const [expandedPhase, setExpandedPhase] = useState(null);
 
-  const { phasesAndMachines, phasesAndMachinesError, isLoadingPhasesAndMachines } = usePhasesAndMachines(
+  const { phasesAndMachines, isLoadingPhasesAndMachines } = usePhasesAndMachines(
     expandedPhase,
     companyId,
   );
