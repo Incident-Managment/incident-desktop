@@ -7,6 +7,7 @@ import CompanyMachines from './CompanyMachines';
 import MainLayout from '../../components/Dashboard/MainLayout';
 import UserManagment from './UsersManagment';
 import Production from './Production';
+
 const DashboardRoutes = () => {
   return (
       <Routes>
@@ -17,7 +18,6 @@ const DashboardRoutes = () => {
           <Route path="company-machines" element={<CompanyMachines />} />
           <Route path="users-managment" element={<UserManagment />} />
           <Route path="production" element={<Production />} />
-          <Route path="settings" element={<div>settings</div>} />
         </Route>
       </Routes>
   );

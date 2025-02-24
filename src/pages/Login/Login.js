@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Form, Input, Button, Typography, message } from 'antd';
 import { MailOutlined, LockOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/Login/Login.css';
 import useLogin from '../../hooks/Login.hooks';
 import { UserContext } from '../../providers/users/UserContext';
@@ -12,6 +13,7 @@ const Login = () => {
   const [form] = Form.useForm();
   const { loginUser } = useContext(UserContext);
   const { loading, error, handleLogin } = useLogin(loginUser);
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     await handleLogin(values.email, values.password);
@@ -19,6 +21,7 @@ const Login = () => {
       message.error(error);
     } else {
       message.success('Login successful');
+      navigate('/dashboard'); // Redirige al dashboard
     }
   };
 

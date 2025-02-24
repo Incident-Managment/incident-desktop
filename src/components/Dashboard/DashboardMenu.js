@@ -34,12 +34,7 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
       key: '5',
       icon: <Users size={20} />,
       label: <Link to="/dashboard/user-profile">Profile</Link>,
-    },
-    {
-      key: '6',
-      icon: <Settings size={20} />,
-      label: <Link to="/dashboard/settings">Settings</Link>,
-    },
+    }
   ];
 
   return (
