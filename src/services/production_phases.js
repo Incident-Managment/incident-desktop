@@ -10,9 +10,9 @@ export const getProductionPhasesByCompany = async (companyId) => {
     }
 };
 
-export const updateProductionPhase = async (id, data) => {
+export const updateProductionPhase = async (data) => {
     try {
-        const updatedProductionPhase = await postData(`updateProductionPhase/${id}`, data);
+        const updatedProductionPhase = await postData(`production_phases/update`, data);
         return updatedProductionPhase;
     } catch (error) {
         console.error("Error updating production phase:", error.message);

@@ -18,9 +18,13 @@ export const useProductionPhases = (companyId) => {
   });
 
   const mutation = useMutation({
-    mutationFn: ({ phaseId, updatedData }) => updateProductionPhase(phaseId, updatedData),
+    mutationFn: (updatedData) => updateProductionPhase(updatedData),
     onSuccess: () => {
       queryClient.invalidateQueries(["productionPhases", companyId]);
+      message.success("Production phase updated successfully");
+    },
+    onError: () => {
+      message.error("Failed to update production phase");
     },
   });
 
@@ -28,6 +32,7 @@ export const useProductionPhases = (companyId) => {
     if (!selectedPhase) return;
 
     const updatedData = {
+      id: selectedPhase.id,
       name: newName.trim() !== "" ? newName : selectedPhase.name,
       phase_order: newOrder !== "" ? parseInt(newOrder, 10) : selectedPhase.phase_order,
       is_active: newActive,
@@ -39,33 +44,24 @@ export const useProductionPhases = (companyId) => {
       updatedData.phase_order === selectedPhase.phase_order &&
       updatedData.is_active === selectedPhase.is_active
     ) {
-      message.info("No se han realizado cambios.");
       return;
     }
 
-    mutation.mutate({ phaseId: selectedPhase.id, updatedData }, {
-      onSuccess: () => {
-        message.success("Fase actualizada correctamente");
-        setSelectedPhase(null);
-      },
-      onError: () => {
-        message.error("Error al actualizar la fase");
-      },
-    });
+    mutation.mutate(updatedData);
   };
 
   return {
     phases,
     selectedPhase,
-    newName,
-    newOrder,
-    newActive,
     setSelectedPhase,
+    newName,
     setNewName,
+    newOrder,
     setNewOrder,
+    newActive,
     setNewActive,
     handleUpdatePhase,
-    error,
     isLoading,
+    error,
   };
 };
