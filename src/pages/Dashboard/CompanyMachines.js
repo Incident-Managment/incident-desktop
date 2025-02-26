@@ -2,20 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, Typography, Row, Col, Space, Tag, Input, Select, Button, Divider } from 'antd';
 import { HardDrive, Cog, User } from 'lucide-react';
 import { getMachinesByCompany, getMachinesByType } from '../../services/company.machines';
-
+import Modal from '../../components/Modal/Modal';
 const { Title, Text } = Typography;
 const { Option } = Select;
-
-const getMachineCategoryColor = (category) => {
-  switch (category) {
-    case 'Manufactura':
-      return 'blue';
-    case 'Mantenimiento':
-      return 'green';
-    default:
-      return 'gray';
-  }
-};
 
 const Machines = ({ companyId, typeId }) => {
   const [machines, setMachines] = useState([]);
@@ -26,6 +15,7 @@ const Machines = ({ companyId, typeId }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedPhase, setSelectedPhase] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchMachines = async () => {
@@ -78,7 +68,9 @@ const Machines = ({ companyId, typeId }) => {
     <div style={{ minHeight: '100vh', padding: '2rem' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <Title level={2} style={{ marginBottom: '2rem', textAlign: 'center' }}>Máquinas</Title>
-
+        <button onClick={ ()=>setIsModalOpen(true)}>Abrir Modal</button>
+        <Modal 
+        state={isModalOpen}  changeState={setIsModalOpen}></Modal>
         {/* Filtros visibles al inicio */}
         <div style={{ marginBottom: '20px' }}>
           <Row gutter={[16, 16]} align="middle" style={{ marginBottom: '1rem' }}>
@@ -162,7 +154,9 @@ const Machines = ({ companyId, typeId }) => {
               >
                 <Space direction="vertical" size="middle" style={{ width: '100%' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Tag color={getMachineCategoryColor(machine.category)}>{machine.category}</Tag>
+                  <Tag style={{whiteSpace: 'normal', wordWrap : 'break-word',
+                                overflow: 'hidden', textOverflow: 'ellipsis',  maxWidth:  '100%' ,width: 'auto'}}      > 
+                                {machine.production_phases.name} </Tag>
                   </div>
                   <Title level={4}>{machine.name}</Title>
                   <Text type="secondary" style={{ marginBottom: '1rem' }}>
@@ -184,7 +178,13 @@ const Machines = ({ companyId, typeId }) => {
                     <Col span={12}>
                       <Space>
                         <Cog size={16} />
-                        <Text type="secondary">{machine.production_phases.name}</Text>
+                        <Text type="secondary">{machine.description}</Text>
+                      </Space>
+                    </Col>
+                    <Col span={12}>
+                      <Space>
+                       {/* Aqui esta el boton de actualizar */}
+                        <button>Actualizar</button>
                       </Space>
                     </Col>
                   </Row>

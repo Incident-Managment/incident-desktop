@@ -21,22 +21,22 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
       label: <Link to="/dashboard/production">Production</Link>,
     },
     {
-      key: '6',
+      key: '4',
       icon: <Cog size={20} />,
       label: <Link to="/dashboard/company-machines">Machines</Link>,
     },
     {
-      key: '4',
+      key: '5',
       icon: <UserCog size={20} />,
       label: <Link to="/dashboard/users-managment">Users Managment</Link>,
     },
     {
-      key: '5',
+      key: '6',
       icon: <Users size={20} />,
       label: <Link to="/dashboard/user-profile">Profile</Link>,
     },
     {
-      key: '6',
+      key: '7',
       icon: <Settings size={20} />,
       label: <Link to="/dashboard/settings">Settings</Link>,
     },

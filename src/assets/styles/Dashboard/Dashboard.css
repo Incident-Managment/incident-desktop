@@ -50,3 +50,11 @@ body {
     padding: 40px;
   }
   
+  .tag {
+    white-space: 'normal';
+    word-wrap : 'break-word';
+    overflow: 'hidden';
+    text-overflow: 'ellipsis';
+    max-width:  '100%';
+    width: 'auto';
+  }
