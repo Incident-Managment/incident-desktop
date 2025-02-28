@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Typography, Row, Col, Card, Statistic, List, Tag, Progress, Space } from 'antd';
 import { AlertCircle, CheckCircle, Clock, Activity } from 'lucide-react';
 import '../../assets/styles/Dashboard/Dashboard.css';
@@ -9,18 +9,8 @@ import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 const { Title, Text } = Typography;
 
 const Dashboard = () => {
-  const [productionPhases, setProductionPhases] = useState([]);
-  const { count, resolvedCount, averageResolutionTime, incidentEfficiency, loading, error } = useCountIncidentsByCompany();
+  const { count, resolvedCount, averageResolutionTime, incidentEfficiency,featureTechnicians, loading, error } = useCountIncidentsByCompany();
   const { recentIncidents } = useIncidents();
-
-  useEffect(() => {
-    setProductionPhases([
-      { id: 1, name: 'Preparación y Configuración', progress: 75 },
-      { id: 2, name: 'Ensamblaje de Componentes', progress: 50 },
-      { id: 3, name: 'Inspección de Calidad', progress: 25 },
-      { id: 4, name: 'Empaque y Almacenaje', progress: 10 },
-    ]);
-  }, []);
 
   const cardStyle = {
     boxShadow: '0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), 0 2px 4px 0 rgba(0,0,0,0.02)',
@@ -107,15 +97,21 @@ const Dashboard = () => {
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="Production Phases" bordered={false}>
+          <Card title="Tecnicos Destacados" bordered={false}>
             <List
               itemLayout="horizontal"
-              dataSource={productionPhases}
+              dataSource={featureTechnicians}
               renderItem={(item) => (
                 <List.Item>
                   <List.Item.Meta
                     title={<Text strong>{item.name}</Text>}
-                    description={<Progress percent={item.progress} status="active" />}
+                    description={
+                      <>
+                        <Text>Técnico</Text>
+                        <Progress percent={parseFloat(item.efficiency)} status="active" />
+                        <Text>{item.efficiency}</Text>
+                      </>
+                    }
                   />
                 </List.Item>
               )}

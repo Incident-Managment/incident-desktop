@@ -3,6 +3,7 @@ import {
   getCountIncidentsByCompany, getCountIncidentsResolvedByCompany,
   averageResolutionTimeByCompany, incidentEfficiencyByCompany
 } from "../../services/incident.services";
+import { featureTechnicians } from '../../services/task.services';
 
 export const useCountIncidentsByCompany = () => {
   const fetchCompanyId = () => {
@@ -49,12 +50,19 @@ export const useCountIncidentsByCompany = () => {
     staleTime: Infinity,
   });
 
+  const { data: featureTechniciansData, isLoading: featureTechniciansLoading, error: featureTechniciansError } = useQuery({
+    queryKey: ['featureTechnicians'],
+    queryFn: featureTechnicians,
+    staleTime: Infinity,
+  });
+
   return {
     count: countData?.count || 0,
     resolvedCount: resolvedCountData?.count || 0,
     averageResolutionTime: averageResolutionTimeData?.averageResolutionTime || 0,
     incidentEfficiency: incidentEfficiencyData?.productionEfficiency || 0,
-    loading: countLoading || resolvedCountLoading || averageResolutionTimeLoading || incidentEfficiencyLoading,
-    error: countError || resolvedCountError || averageResolutionTimeError || incidentEfficiencyError
+    featureTechnicians: featureTechniciansData || [],
+    loading: countLoading || resolvedCountLoading || averageResolutionTimeLoading || incidentEfficiencyLoading || featureTechniciansLoading,
+    error: countError || resolvedCountError || averageResolutionTimeError || incidentEfficiencyError || featureTechniciansError
   };
 };

@@ -1,4 +1,4 @@
-import { postData } from "../config/api";
+import { fetchData,postData } from "../config/api";
 
 export const assigned_tasks = async (incident_id, assigned_user_id,company_id,assignment_date) => {
     try {
@@ -9,3 +9,13 @@ export const assigned_tasks = async (incident_id, assigned_user_id,company_id,as
         throw error;
     }
 };
+
+export const featureTechnicians = async () => {
+    try {
+        const data = await fetchData("assigned_tasks/featureTechnicians");
+        return data;
+    } catch (error) {
+        console.error("Error logging in:", error.message);
+        throw error;
+    }
+}
