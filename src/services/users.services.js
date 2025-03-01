@@ -20,6 +20,16 @@ export const createUsers = async (data) => {
     }
 }
 
+export const updateUser = async (data) => {
+    try {
+        const user = await postData("users/updateUser", data);
+        return user;
+    } catch (error) {
+        console.error("Error updating user:", error.message);
+        throw error;
+    }
+}
+
 export const login = async (email, password) => {
     try {
         const data = await postData("users/login", { email, password });

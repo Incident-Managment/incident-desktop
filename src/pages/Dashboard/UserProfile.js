@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Descriptions, Row, Col, Card, Tooltip, Spin, Alert, Avatar, Button } from 'antd';
 import { MailOutlined, PhoneOutlined, UserOutlined, ClusterOutlined } from '@ant-design/icons';
 import useUserProfile from '../../hooks/DashboardHooks/UserProfile.hooks';
@@ -7,6 +7,18 @@ const { Title, Text } = Typography;
 
 const UserProfile = () => {
     const { user, loading, error } = useUserProfile();
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth < 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Check initial screen size
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     if (loading) {
         return (
@@ -37,12 +49,13 @@ const UserProfile = () => {
             bordered={false}
         >
             <Row gutter={[16, 16]} align="middle">
-                <Col span={6}>
+                <Col span={isSmallScreen ? 24 : 6} style={{ textAlign: isSmallScreen ? 'center' : 'left' }}>
                     <Avatar
                         size={100}
                         style={{
                             border: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',
-                            background: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',                        }}
+                            background: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',
+                        }}
                     >
                         <div
                             style={{
@@ -65,7 +78,7 @@ const UserProfile = () => {
                         </div>
                     </Avatar>
                 </Col>
-                <Col span={18}>
+                <Col span={isSmallScreen ? 24 : 18} style={{ textAlign: isSmallScreen ? 'center' : 'left' }}>
                     <Title level={2} style={{ marginBottom: 5 }}>
                         {user.name}
                     </Title>
@@ -98,12 +111,12 @@ const UserProfile = () => {
                 </Descriptions.Item>
                 <Descriptions.Item
                     label={<><ClusterOutlined style={{ marginRight: 8 }} /> Company</>}
-                    >
+                >
                     <Text>{user.company.name}</Text>
                 </Descriptions.Item>
                 <Descriptions.Item
                     label={<><UserOutlined style={{ marginRight: 8 }} /> Account Created</>}
-                    >
+                >
                     <Text>{formatDate(user.creation_date)}</Text>
                 </Descriptions.Item>
             </Descriptions>

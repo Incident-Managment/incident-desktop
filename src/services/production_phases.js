@@ -31,6 +31,16 @@ export const getPhasesAndMachines = async (phase_id,companyId) => {
     }
 }
 
+export const createProductionPhase = async (data) => {
+    try {
+        const createdProductionPhase = await postData(`production_phases/createProductionPhase`, data);
+        return createdProductionPhase;
+    } catch (error) {
+        console.error("Error creating production phase:", error.message);
+        throw error;
+    }
+}
+
 export const addMachineToPhase = async (data) => {
     try {
         const addedMachine = await postData(`phases_machine/addMachinesToPhase`, data);

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { message } from "antd";
 import { getProductionPhasesByCompany, updateProductionPhase, getPhasesAndMachines, addMachineToPhase } from "../../services/production_phases";
 import { getMachinesByCompany } from "../../services/company.machines";
+import { createProductionPhase } from "../../services/production_phases";
 
 export const useProductionPhases = (companyId) => {
   const queryClient = useQueryClient();
@@ -134,5 +135,47 @@ export const usePhasesAndMachines = (phaseId, companyId) => {
     phasesAndMachines,
     phasesAndMachinesError,
     isLoadingPhasesAndMachines,
+  };
+};
+
+export const useCreateProductionPhase = (companyId) => {
+  const queryClient = useQueryClient();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newPhaseName, setNewPhaseName] = useState("");
+  const [newPhaseOrder, setNewPhaseOrder] = useState("");
+  const [newPhaseActive, setNewPhaseActive] = useState(true);
+
+  const createPhaseMutation = useMutation({
+    mutationFn: (data) => createProductionPhase(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["productionPhases", companyId]);
+      message.success("Production phase created successfully");
+      setIsModalVisible(false);
+    },
+    onError: () => {
+      message.error("Failed to create production phase");
+    },
+  });
+
+  const handleCreatePhase = () => {
+    const data = {
+      name: newPhaseName,
+      phase_order: parseInt(newPhaseOrder, 10),
+      company_id: companyId,
+      is_active: newPhaseActive,
+    };
+    createPhaseMutation.mutate(data);
+  };
+
+  return {
+    isModalVisible,
+    setIsModalVisible,
+    newPhaseName,
+    setNewPhaseName,
+    newPhaseOrder,
+    setNewPhaseOrder,
+    newPhaseActive,
+    setNewPhaseActive,
+    handleCreatePhase,
   };
 };
