@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Input, Switch, Button } from "antd";
+import { Modal, Input, Switch } from "antd";
 import { useCreateProductionPhase } from "../../hooks/ProductionHooks/production.hooks";
 
 const CreateProductionPhaseModal = ({ companyId, isVisible, onClose }) => {
