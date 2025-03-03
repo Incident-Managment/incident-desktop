@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Table, Button, Space, Input } from 'antd';
 import { Plus, MoreHorizontal } from 'lucide-react';
-import { useGetUsers, useUpdateUser } from '../../hooks/UsersHooks/users.hooks';
+import { useGetUsers } from '../../hooks/UsersHooks/users.hooks';
 import CreateUserModal from '../../components/Users/createUsers';
 import UpdateUserModal from '../../components/Users/updateUsers'; // Import the update modal
 import { formatDate } from '../../utils/date-format';

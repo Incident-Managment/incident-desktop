@@ -1,14 +1,10 @@
-import { Modal, Form, Input, Select, Button, Typography } from "antd"
+import { Modal, Form, Input, Button, Typography } from "antd"
 import { X } from "lucide-react"
-import { useGetRolesGlobal } from "../../hooks/RolesHooks/roles.hooks"
-import { useGetCompaniesGlobal } from "../../hooks/CompaniesHooks/companies.hooks"
 import { useUpdateUser } from "../../hooks/UsersHooks/users.hooks"
 
 const { Title } = Typography
 
 const UpdateUserModal = ({ isOpen, onClose, user, onUpdateUser }) => {
-  const { data: roles } = useGetRolesGlobal()
-  const { data: companies } = useGetCompaniesGlobal()
   const [form] = Form.useForm()
   const { mutate: updateUser } = useUpdateUser()
 
