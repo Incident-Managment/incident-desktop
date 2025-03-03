@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Typography, Table, Button, Space, Input } from 'antd';
 import { Plus, MoreHorizontal } from 'lucide-react';
-import { useGetUsers } from '../../hooks/UsersHooks/users.hooks';
-import CreateUserModal from '../../components/Users/createUsers'; // Import the modal
+import { useGetUsers, useUpdateUser } from '../../hooks/UsersHooks/users.hooks';
+import CreateUserModal from '../../components/Users/createUsers';
+import UpdateUserModal from '../../components/Users/updateUsers'; // Import the update modal
 import { formatDate } from '../../utils/date-format';
 const { Title } = Typography;
 
 const UserManagement = () => {
   const { data: users, isLoading, error } = useGetUsers();
   const [setSearchText] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const handleSearch = (selectedKeys, confirm) => {
     confirm();
@@ -117,7 +120,14 @@ const UserManagement = () => {
     {
       title: 'Acciones',
       key: 'actions',
-      render: (text, record) => <Button icon={<MoreHorizontal size={16} />} />,
+      render: (text, record) => (
+        <Space>
+          <Button icon={<MoreHorizontal size={16} />} onClick={() => {
+            setSelectedUser(record);
+            setIsUpdateModalOpen(true);
+          }} />
+        </Space>
+      ),
     },
   ];
 
@@ -128,17 +138,24 @@ const UserManagement = () => {
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Title level={2}>Gestión de Usuarios</Title>
-        <Button type="primary" icon={<Plus size={16} />} onClick={() => setIsModalOpen(true)}>
+        <Button type="primary" icon={<Plus size={16} />} onClick={() => setIsCreateModalOpen(true)}>
           Nuevo Usuario
         </Button>
       </div>
       <Table dataSource={users} columns={columns} rowKey="id" pagination={{ pageSize: 10 }} />
       <CreateUserModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
         onCreateUser={(user) => {
-          // Handle user creation logic here
-          setIsModalOpen(false);
+          setIsCreateModalOpen(false);
+        }}
+      />
+      <UpdateUserModal
+        isOpen={isUpdateModalOpen}
+        onClose={() => setIsUpdateModalOpen(false)}
+        user={selectedUser}
+        onUpdateUser={(updatedUser) => {
+          setIsUpdateModalOpen(false);
         }}
       />
     </Space>

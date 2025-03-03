@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getUsers, createUsers } from '../../services/users.services';
+import { getUsers, createUsers, updateUser } from '../../services/users.services';
 import { message } from 'antd';
 
 export const useGetUsers = () => {
@@ -18,6 +18,18 @@ export const useCreateUsers = () => {
         },
         onError: (error) => {
             message.error(`Error al crear el usuario: ${error.message}`);
+        },
+    });
+};
+
+export const useUpdateUser = () => {
+    return useMutation({
+        mutationFn: updateUser,
+        onSuccess: (data) => {
+            message.success("Usuario actualizado correctamente");
+        },
+        onError: (error) => {
+            message.error(`Error al actualizar el usuario: ${error.message}`);
         },
     });
 };
