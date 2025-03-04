@@ -29,12 +29,24 @@ registerRoute(
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
+// Cache images
 registerRoute(
   ({ url }) => url.origin === self.location.origin && url.pathname.endsWith('.png'),
   new StaleWhileRevalidate({
     cacheName: 'images',
     plugins: [
       new ExpirationPlugin({ maxEntries: 50 }),
+    ],
+  })
+);
+
+// Cache all files in src
+registerRoute(
+  ({ url }) => url.origin === self.location.origin && url.pathname.startsWith('/src/'),
+  new StaleWhileRevalidate({
+    cacheName: 'src-files',
+    plugins: [
+      new ExpirationPlugin({ maxEntries: 100 }),
     ],
   })
 );
