@@ -7,6 +7,7 @@ import CompanyMachines from './CompanyMachines';
 import MainLayout from '../../components/Dashboard/MainLayout';
 import UserManagment from './UsersManagment';
 import Production from './Production';
+import NotFound from '../NotFound'; // Import the NotFound component
 
 const DashboardRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const DashboardRoutes = () => {
           <Route path="company-machines" element={<CompanyMachines />} />
           <Route path="users-managment" element={<UserManagment />} />
           <Route path="production" element={<Production />} />
+          <Route path="*" element={<NotFound />} /> {/* Catch-all route */}
         </Route>
       </Routes>
   );

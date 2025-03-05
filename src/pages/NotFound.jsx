@@ -1,7 +1,6 @@
 "use client"
 import { Button, Result, Typography, Layout } from "antd"
 import { AlertTriangle, Home, ArrowLeft } from "lucide-react"
-import Link from "next/link"
 
 const { Content } = Layout
 const { Paragraph, Text } = Typography
@@ -25,7 +24,7 @@ export default function NotFound() {
               </Paragraph>
               <div className="flex flex-wrap gap-4 justify-center">
                 <Button type="primary" size="large" icon={<Home size={16} />}>
-                  <Link href="/dashboard">Ir a Inicio</Link>
+                  <a href="/dashboard">Ir a Inicio</a>
                 </Button>
                 <Button size="large" icon={<ArrowLeft size={16} />} onClick={() => window.history.back()}>
                   Regresar
