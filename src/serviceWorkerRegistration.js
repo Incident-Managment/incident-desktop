@@ -29,6 +29,14 @@ export function register(config) {
         registerValidSW(swUrl, config);
       }
     });
+
+    window.addEventListener('offline', () => {
+      window.location.href = '/not-found';
+    });
+
+    window.addEventListener('online', () => {
+      window.location.href = '/';
+    });
   }
 }
 
@@ -90,6 +98,7 @@ function checkValidServiceWorker(swUrl, config) {
       console.log(
         'No internet connection found. App is running in offline mode.'
       );
+      window.location.href = '/not-found';
     });
 }
 
