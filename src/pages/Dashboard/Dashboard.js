@@ -11,13 +11,11 @@ import {
   Tabs,
   Select,
   Divider,
-  Tooltip as AntTooltip,
 } from "antd"
 import {
   BarChart2,
   PieChartIcon,
   LineChartIcon,
-  HelpCircle,
 } from "lucide-react"
 import {
   LineChart,
@@ -33,8 +31,6 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
-  AreaChart,
-  Area,
   ComposedChart,
 } from "recharts"
 import dayjs from "dayjs"
@@ -43,7 +39,7 @@ import '../../assets/styles/Dashboard/Dashboard.css';
 import { TotalIncidentsCard, ResolvedIncidentsCard, AverageResolutionTimeCard, IncidentEfficiencyCard } from '../../components/Dashboard/cards/KSICardComponent';
 import IncidencesByStatus from "../../components/Dashboard/IncidentsCharts/IncidentByStatus"
 import ActiveIncidents from "../../components/Dashboard/IncidentsCharts/ActiveIncidents"
-
+import IncidentComparison from "../../components/Dashboard/IncidentsCharts/IncidentComparation"
 dayjs.locale("es")
 
 const { Title, Text, Paragraph } = Typography
@@ -107,123 +103,10 @@ const commonIssuesData = [
   },
 ]
 
-const weeklyTrendData = [
-  { name: "Sem 1", actual: 39, anterior: 35 },
-  { name: "Sem 2", actual: 30, anterior: 34 },
-  { name: "Sem 3", actual: 43, anterior: 32 },
-  { name: "Sem 4", actual: 48, anterior: 37 },
-]
-
-
-const recentIncidentsData = [
-  {
-    id: 1,
-    title: "Error en el sistema de facturación",
-    description: "Los usuarios no pueden generar facturas electrónicas",
-    status: { name: "En Progreso", color: "blue" },
-    priority: { name: "Alta", color: "red" },
-    department: "Finanzas",
-    assignee: "Ana Martínez",
-    created: "2023-06-10T14:30:00",
-    updated: "2023-06-11T09:15:00",
-    category: "Error de Sistema",
-  },
-  {
-    id: 2,
-    title: "Problema de conexión a la red",
-    description: "Departamento de marketing sin conexión a internet",
-    status: { name: "Resuelto", color: "green" },
-    priority: { name: "Alta", color: "red" },
-    department: "Marketing",
-    assignee: "Carlos Ruiz",
-    created: "2023-06-09T10:45:00",
-    updated: "2023-06-09T12:30:00",
-    category: "Problemas de Red",
-  },
-  {
-    id: 3,
-    title: "Actualización de software fallida",
-    description: "Error al actualizar aplicación de diseño gráfico",
-    status: { name: "Pendiente", color: "gold" },
-    priority: { name: "Media", color: "orange" },
-    department: "Diseño",
-    assignee: "Elena Sánchez",
-    created: "2023-06-08T16:20:00",
-    updated: "2023-06-08T16:20:00",
-    category: "Error de Software",
-  },
-  {
-    id: 4,
-    title: "Fallo en la impresora central",
-    description: "La impresora del piso 3 muestra error de conexión",
-    status: { name: "En Progreso", color: "blue" },
-    priority: { name: "Baja", color: "green" },
-    department: "Administración",
-    assignee: "Javier López",
-    created: "2023-06-07T11:10:00",
-    updated: "2023-06-07T14:25:00",
-    category: "Fallo de Hardware",
-  },
-  {
-    id: 5,
-    title: "Error en el servidor de correo",
-    description: "Los correos no se están enviando correctamente",
-    status: { name: "Resuelto", color: "green" },
-    priority: { name: "Alta", color: "red" },
-    department: "IT",
-    assignee: "María Pérez",
-    created: "2023-06-06T09:30:00",
-    updated: "2023-06-06T13:45:00",
-    category: "Error de Sistema",
-  },
-  {
-    id: 6,
-    title: "Problema con acceso a base de datos",
-    description: "Usuarios no pueden acceder a la base de datos principal",
-    status: { name: "Pendiente", color: "gold" },
-    priority: { name: "Alta", color: "red" },
-    department: "IT",
-    assignee: "Carlos Ruiz",
-    created: "2023-06-05T15:20:00",
-    updated: "2023-06-05T16:45:00",
-    category: "Error de Sistema",
-  },
-  {
-    id: 7,
-    title: "Fallo en sistema de climatización",
-    description: "Temperatura elevada en sala de servidores",
-    status: { name: "Resuelto", color: "green" },
-    priority: { name: "Alta", color: "red" },
-    department: "Infraestructura",
-    assignee: "Javier López",
-    created: "2023-06-04T08:30:00",
-    updated: "2023-06-04T11:15:00",
-    category: "Fallo de Hardware",
-  },
-  {
-    id: 8,
-    title: "Error en aplicación de contabilidad",
-    description: "La aplicación se cierra inesperadamente al generar informes",
-    status: { name: "En Progreso", color: "blue" },
-    priority: { name: "Media", color: "orange" },
-    department: "Finanzas",
-    assignee: "Elena Sánchez",
-    created: "2023-06-03T13:45:00",
-    updated: "2023-06-03T14:30:00",
-    category: "Error de Software",
-  },
-]
 
 
 const Dashboard = () => {
   const [viewMode, setViewMode] = useState("weekly")
-
-  const count = 66
-  const resolvedCount = 3
-  const averageResolutionTime = 319.71
-  const incidentEfficiency = 4.55
-
-
 
   const renderCommonIssuesDetail = () => {
     return (
@@ -324,16 +207,16 @@ const Dashboard = () => {
         {/* KPI Cards */}
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={6}>
-            <TotalIncidentsCard count={count} />
+            <TotalIncidentsCard/>
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <ResolvedIncidentsCard resolvedCount={resolvedCount} />
+            <ResolvedIncidentsCard />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <AverageResolutionTimeCard averageResolutionTime={averageResolutionTime} />
+            <AverageResolutionTimeCard />
           </Col>
           <Col xs={24} sm={12} lg={6}>
-            <IncidentEfficiencyCard incidentEfficiency={incidentEfficiency} />
+            <IncidentEfficiencyCard/>
           </Col>
         </Row>
 
@@ -350,58 +233,12 @@ const Dashboard = () => {
             >
               <Row gutter={[16, 16]}>
                 <Col xs={24} lg={16}>
-                  <Card
-                    title="Comparativa de Incidencias"
-                    className="chart-card"
-                    extra={
-                      <AntTooltip title="Muestra la comparación de incidencias entre el periodo actual y el anterior">
-                        <Button type="text" icon={<HelpCircle size={16} />} />
-                      </AntTooltip>
-                    }
-                  >
-                    <div className="chart-container">
-                      <ResponsiveContainer width="100%" height={300}>
-                        <AreaChart data={weeklyTrendData}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <defs>
-                            <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                              <stop offset="95%" stopColor="#8884d8" stopOpacity={0.2} />
-                            </linearGradient>
-                            <linearGradient id="colorAnterior" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                              <stop offset="95%" stopColor="#82ca9d" stopOpacity={0.2} />
-                            </linearGradient>
-                          </defs>
-                          <Area
-                            type="monotone"
-                            dataKey="actual"
-                            stroke="#8884d8"
-                            fillOpacity={1}
-                            fill="url(#colorActual)"
-                            name="Periodo Actual"
-                          />
-                          <Area
-                            type="monotone"
-                            dataKey="anterior"
-                            stroke="#82ca9d"
-                            fillOpacity={1}
-                            fill="url(#colorAnterior)"
-                            name="Periodo Anterior"
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </Card>
+                <IncidentComparison />
                 </Col>
 
                 <Col xs={24} lg={8}>
                   <Card
-                    title="Problemas Más Comunes"
+                    title="Problemas Más Comunes del Dia de Hoy"
                     className="chart-card"
                     extra={
                       <Button type="link" onClick={() => { }}>
@@ -433,7 +270,7 @@ const Dashboard = () => {
                 </Col>
               </Row>
 
-              <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
+              <Row gutter={[16, 16]} style={{ marginTop: "25px" }}>
                 <Col xs={24}>
                   <Card title="Incidencias por Estado" className="chart-card">
                     <IncidencesByStatus
@@ -447,7 +284,7 @@ const Dashboard = () => {
               <Row gutter={[16, 16]} style={{ marginTop: "16px" }}>
                 <Col xs={24}>
                   <Card title="Incidencias Activas" className="active-incidents-card">
-                    <ActiveIncidents incidents={recentIncidentsData} />
+                    <ActiveIncidents />
                   </Card>
                 </Col>
               </Row>
