@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Popover, Form, Select, message } from 'antd';
+import { Popover, Form, Select, message, Tooltip, Button } from 'antd';
+import { UserCheck } from 'lucide-react';
 import useAssignedTasks from '../../hooks/IncidentsHooks/assigned_tasks.hooks';
 import useTechniqueUsers from '../../hooks/IncidentsHooks/UsersTechinque.hooks';
 import dayjs from 'dayjs';
@@ -45,10 +46,7 @@ const AssignTaskPopover = ({ incidentId }) => {
                 label="Técnico"
                 rules={[{ required: true, message: 'Por favor seleccione un técnico' }]}
             >
-                <Select
-                    loading={isLoadingTechnicians}
-                    placeholder="Seleccione un técnico"
-                >
+                <Select loading={isLoadingTechnicians} placeholder="Seleccione un técnico">
                     {technicians?.map((tech) => (
                         <Option key={tech.id} value={tech.id}>
                             {tech.name} ({tech.task_count} tareas)
@@ -57,9 +55,9 @@ const AssignTaskPopover = ({ incidentId }) => {
                 </Select>
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit" loading={isLoading}>
-                    Asignar
-                </Button>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
+            Asignar
+            </Button>
             </Form.Item>
         </Form>
     );
@@ -72,7 +70,11 @@ const AssignTaskPopover = ({ incidentId }) => {
             open={visible}
             onOpenChange={setVisible}
         >
-            <Button type="primary" onClick={(e) => e.stopPropagation()}>Asignar tarea a técnico</Button>
+            <Tooltip title="Asignar tarea">
+                <span onClick={(e) => e.stopPropagation()} style={{ cursor: 'pointer' }}>
+                    <UserCheck size={18} />
+                </span>
+            </Tooltip>
         </Popover>
     );
 };

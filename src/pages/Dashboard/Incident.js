@@ -1,168 +1,186 @@
 import React, { useState } from 'react';
-import { Card, Typography, Row, Col, Space, Tag, Drawer, List, Pagination } from 'antd';
+import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button } from 'antd';
 import { formatDistanceToNow } from 'date-fns';
-import { AlertCircle, CheckCircle2, Clock, Cog, FileText, HardDrive, User } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileText, UserCheck } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 import AssignTaskPopover from '../../components/Dashboard/Options';
 
 const { Title, Text } = Typography;
+const { Search } = Input;
+const { Option } = Select;
 
 const getPriorityColor = (priority) => {
   switch (priority) {
-    case 'Alta':
-      return 'red';
-    case 'Media':
-      return 'orange';
-    default:
-      return 'green';
+    case 'Alta': return 'red';
+    case 'Media': return 'orange';
+    default: return 'green';
   }
 };
 
 const getStatusColor = (status) => {
   switch (status) {
-    case 'En Espera':
-      return 'gray';
-    case 'En Progreso':
-      return 'blue';
-    case 'Resuelto':
-      return 'green';
-    default:
-      return 'gray';
+    case 'En Espera': return 'yellow';
+    case 'En Progreso': return 'blue';
+    case 'Resuelto': return 'green';
+    default: return 'yellow';
   }
+};
+
+const statusPriority = {
+  'En Espera': 1,
+  'En Progreso': 2,
+  'Resuelto': 3,
+};
+
+const priorityOrder = {
+  'Alta': 1,
+  'Media': 2,
+  'Baja': 3,
 };
 
 export default function Incidents() {
   const { incidents, drawerVisible, statusHistory, handleIncidentClick, closeDrawer } = useIncidents();
-  const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('');
+  const [, setSelectedIncident] = useState(null);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleSearch = (value) => setSearchTerm(value);
+  const handleFilterChange = (value) => setFilterStatus(value);
+
+  const openDrawer = (incidentId) => {
+    setSelectedIncident(incidentId);
+    handleIncidentClick(incidentId);
   };
 
-  const paginatedIncidents = incidents.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const filteredIncidents = incidents
+    .filter((incident) =>
+      incident.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (filterStatus ? incident.status === filterStatus : true)
+    )
+    .sort((a, b) => {
+      if (statusPriority[a.status] !== statusPriority[b.status]) {
+        return statusPriority[a.status] - statusPriority[b.status];
+      }
+      return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
+    });
+
+  const columns = [
+    {
+      title: 'Prioridad',
+      dataIndex: 'priority',
+      key: 'priority',
+      render: (priority) => <Tag color={getPriorityColor(priority)}>{priority}</Tag>,
+    },
+    {
+      title: 'Estado',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status) => <Tag color={getStatusColor(status)}>{status}</Tag>,
+    },
+    {
+      title: 'Título',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: 'Descripción',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
+      title: 'Usuario',
+      dataIndex: 'user',
+      key: 'user',
+    },
+    {
+      title: 'Máquina',
+      dataIndex: 'machine',
+      key: 'machine',
+    },
+    {
+      title: 'Categoría',
+      dataIndex: 'category',
+      key: 'category',
+    },
+    {
+      title: 'Fase de Producción',
+      dataIndex: 'production_phase',
+      key: 'production_phase',
+    },
+    {
+      title: 'Creado',
+      dataIndex: 'creation_date',
+      key: 'creation_date',
+      render: (date) => <Text>{formatDistanceToNow(new Date(date), { addSuffix: true })}</Text>,
+    },
+    {
+      title: 'Última Actualización',
+      dataIndex: 'update_date',
+      key: 'update_date',
+      render: (date, record) => (
+        <Space>
+          {record.status === 'Resuelto' ? <CheckCircle2 size={16} color="green" /> : <AlertCircle size={16} color="orange" />}
+          <Text>{formatDistanceToNow(new Date(date), { addSuffix: true })}</Text>
+        </Space>
+      ),
+    },
+    {
+      title: 'Acciones',
+      key: 'action',
+      render: (_, record) => (
+        <Space>
+          {record.status === 'En Espera' && !record.assigned_task && (
+            <Tooltip title="Asignar tarea">
+              <AssignTaskPopover incidentId={record.id} companyId={record.company_id}>
+                <Button type="text" icon={<UserCheck size={18} />} />
+              </AssignTaskPopover>
+            </Tooltip>
+          )}
+          <Tooltip title="Ver historial">
+            <Button type="text" icon={<FileText size={18} />} onClick={() => openDrawer(record.id)} />
+          </Tooltip>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <div style={{ minHeight: '100vh' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <Title level={2} style={{ marginBottom: '2rem' }}>Incidencias</Title>
-        <Row gutter={[16, 16]} style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {paginatedIncidents.map((incident) => (
-            <Col xs={24} sm={12} lg={8} key={incident.id} style={{ display: 'flex' }}>
-              <Card
-                style={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-                onClick={() => handleIncidentClick(incident.id)}
-              >
-                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Tag color={getPriorityColor(incident.priority)}>{incident.priority}</Tag>
-                    <Tag color={getStatusColor(incident.status)}>{incident.status}</Tag>
-                  </div>
-                  <Title level={4}>{incident.title}</Title>
-                  <Text type="secondary" style={{ marginBottom: '1rem' }}>{incident.description}</Text>
-                  <Row gutter={[16, 16]}>
-                    <Col span={12}>
-                      <Space>
-                        <User size={16} />
-                        <Text type="secondary">{incident.user}</Text>
-                      </Space>
-                    </Col>
-                    <Col span={12}>
-                      <Space>
-                        <HardDrive size={16} />
-                        <Text type="secondary">{incident.machine}</Text>
-                      </Space>
-                    </Col>
-                    <Col span={12}>
-                      <Space>
-                        <Cog size={16} />
-                        <Text type="secondary">{incident.category}</Text>
-                      </Space>
-                    </Col>
-                    <Col span={12}>
-                      <Space>
-                        <FileText size={16} />
-                        <Text type="secondary">{incident.production_phase.split(':')[0]}</Text>
-                      </Space>
-                    </Col>
-                  </Row>
-                  <Row justify="space-between" align="middle">
-                    <Space>
-                      <Clock size={16} />
-                      <Text type="secondary">
-                        {formatDistanceToNow(new Date(incident.creation_date), { addSuffix: true })}
-                      </Text>
-                    </Space>
-                    <Space>
-                      {incident.status === 'Resuelto' ? (
-                        <CheckCircle2 size={16} color="green" />
-                      ) : (
-                        <AlertCircle size={16} color="orange" />
-                      )}
-                      <Text type="secondary">
-                        {formatDistanceToNow(new Date(incident.update_date), { addSuffix: true })}
-                      </Text>
-                    </Space>
-                  </Row>
-                  {incident.assigned_task ? (
-                    <Text type="secondary">Tarea asignada a: {incident.assigned_task.assigned_user_id}</Text>
-                  ) : (
-                    incident.status === 'En Espera' && (
-                      <div onClick={(e) => e.stopPropagation()}>
-                        <AssignTaskPopover incidentId={incident.id} companyId={incident.company_id} />
-                      </div>
-                    )
-                  )}
-                </Space>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={incidents.length}
-            onChange={handlePageChange}
-          />
-        </div>
-        <Drawer
-          title="Historial de Estado de la Incidencia"
-          placement="right"
-          onClose={closeDrawer}
-          open={drawerVisible}
-          width={400}
-        >
-          <List
-            dataSource={statusHistory}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={
-                    item.previous_status.name === undefined && item.new_status.name === 'En Espera'
-                      ? 'Se creó la orden en status En Espera'
-                      : `De: ${item.previous_status.name} a ${item.new_status.name}`
-                  }
-                  description={
-                    <>
-                      <Text>{item.comment}</Text>
-                      <br />
-                      <Text type="secondary">{`Actualizado por: ${item.user.name}`}</Text>
-                      <br />
-                      <Text type="secondary">{formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true })}</Text>
-                    </>
-                  }
-                />
-              </List.Item>
-            )}
-          />
-        </Drawer>
+      <Title level={1} style={{ marginBottom: '2rem' }}>Incidencias</Title>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <Search placeholder="Buscar incidencias" onSearch={handleSearch} style={{ width: 200 }} />
+        <Select placeholder="Filtrar por estado" onChange={handleFilterChange} style={{ width: 200 }}>
+          <Option value="">Todos</Option>
+          <Option value="En Espera">En Espera</Option>
+          <Option value="En Progreso">En Progreso</Option>
+          <Option value="Resuelto">Resuelto</Option>
+        </Select>
       </div>
+      <Table
+        columns={columns}
+        dataSource={filteredIncidents}
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+      />
+      <Drawer
+        title="Historial de Estado de la Incidencia"
+        placement="right"
+        onClose={closeDrawer}
+        open={drawerVisible}
+        width={400}
+      >
+        <List
+          dataSource={statusHistory}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                title={`De: ${item.previous_status?.name || 'Creación'} a ${item.new_status.name}`}
+                description={<Text>{item.comment}</Text>}
+              />
+            </List.Item>
+          )}
+        />
+      </Drawer>
     </div>
   );
 }

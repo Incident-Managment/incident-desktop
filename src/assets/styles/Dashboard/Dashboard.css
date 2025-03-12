@@ -1,52 +1,348 @@
-body {
-    background-color: #f4f4f9;
-    font-family: "Arial", sans-serif;
+.dashboard-header {
+  margin-bottom: 24px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dashboard-title {
+  margin-bottom: 4px !important;
+}
+
+.date-picker {
+  min-width: 250px;
+}
+
+.time-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.period-navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* KPI Cards */
+.kpi-card {
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-content {
+  padding: 8px;
+}
+
+.kpi-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.kpi-icon {
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kpi-footer {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Dashboard Tabs */
+.dashboard-tabs {
+  margin-top: 24px;
+}
+
+.dashboard-tabs .ant-tabs-tab {
+  padding: 12px 16px;
+}
+
+.dashboard-tabs .ant-tabs-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Charts */
+.chart-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container {
+  margin-top: 16px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.view-mode-toggle {
+  margin-bottom: 16px;
+}
+
+/* Status Cards */
+.status-summary {
+  margin-top: 16px;
+}
+
+.status-card {
+  text-align: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.status-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.active-card {
+  border-top: 3px solid #1890ff;
+}
+
+.pending-card {
+  border-top: 3px solid #faad14;
+}
+
+.resolved-card {
+  border-top: 3px solid #52c41a;
+}
+
+/* Active Incidents */
+.active-incidents-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.active-incidents-list .ant-list-item {
+  padding: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.active-incidents-list .ant-list-item:hover {
+  background-color: #fafafa;
+}
+
+.incident-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+/* Common Issues */
+.common-issues-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.issues-header {
+  margin-bottom: 24px;
+}
+
+.common-issues-detail {
+  margin-top: 16px;
+}
+
+.issues-list {
+  height: 300px;
+  overflow-y: auto;
+  padding-right: 16px;
+}
+
+.issue-color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.issue-percentage {
+  font-weight: bold;
+}
+
+/* Calendar */
+.calendar-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.calendar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-incident-marker {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 16px;
+  padding: 8px;
+  background-color: #fafafa;
+  border-radius: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Trends */
+.trend-up {
+  color: #52c41a;
+}
+
+.trend-down {
+  color: #f5222d;
+}
+
+/* Status Icons */
+.status-resolved {
+  color: #52c41a;
+}
+
+.status-progress {
+  color: #1890ff;
+}
+
+.status-pending {
+  color: #faad14;
+}
+
+/* Loading */
+.loading-container {
+  min-height: 400px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
-  
-  .ant-card {
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
-  
-  .ant-card-head {
-    font-size: 16px;
-    font-weight: bold;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+
+  .header-actions .ant-space {
+    flex-wrap: wrap;
+    gap: 8px;
   }
-  
-  .ant-statistic-title {
+
+  .time-navigation {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .date-picker {
+    width: 100%;
+  }
+
+  .department-filter {
+    width: 100% !important;
+    margin-bottom: 8px;
+  }
+
+  .ant-space {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .ant-space-item {
+    width: 100%;
+    margin-right: 0 !important;
+  }
+
+  .ant-btn {
+    width: 100%;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .kpi-card {
+    margin-bottom: 16px;
+  }
+
+  .ant-list-item-meta-avatar {
+    margin-right: 8px !important;
+  }
+
+  .ant-list-item-meta-title {
     font-size: 14px;
-    color: #6c757d;
   }
-  
-  .ant-statistic-content-value {
-    font-size: 24px;
-    font-weight: bold;
+
+  .ant-list-item-meta-description {
+    font-size: 12px;
   }
-  
-  .ant-table {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  .ant-card-head-title {
+    font-size: 16px;
   }
-  
-  .ant-table-thead > tr > th {
-    background-color: #007bff;
-    color: #ffffff;
-    font-weight: bold;
+
+  .incident-meta {
+    flex-direction: column;
+    gap: 4px;
   }
-  
-  .ant-table-tbody > tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .ant-table-pagination {
-    margin: 16px 0;
-  }
-  
-  .pie-chart-placeholder {
-    text-align: center;
-    padding: 40px;
-  }
-  
+}
+

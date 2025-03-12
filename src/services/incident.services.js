@@ -73,3 +73,14 @@ export const getRecentIncidentsByCompany = async (companyId) => {
         throw error;
     }
 }
+
+export const getIncidentByStatusWeekAndMonthly = async (companyId) => {
+    try {
+        const countIncidentsByCompany = await fetchData(`incidents/incidentsByStatusMonthly?companyId=${companyId}`);
+        return countIncidentsByCompany;
+    }
+    catch (error) {
+        console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany } from '../../services/incident.services';
+import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly } from '../../services/incident.services';
 
 export const useIncidents = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -49,6 +49,20 @@ export const useIncidents = () => {
     return response;
   };
 
+  const fetchIncidentsByStatusWeekAndMonthly = async () => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      throw new Error('User data not found in cache');
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id) {
+      throw new Error('Invalid company data in cache');
+    }
+    const companyId = parsedUser.user.company.id;
+    const response = await getIncidentByStatusWeekAndMonthly(companyId);
+    return response;
+  };
+
   const { data: incidents = [], error, isLoading } = useQuery({
     queryKey: ['incidents'],
     queryFn: fetchIncidents,
@@ -58,6 +72,12 @@ export const useIncidents = () => {
   const { data: recentIncidents = [], error: recentError, isLoading: recentLoading } = useQuery({
     queryKey: ['recentIncidents'],
     queryFn: fetchRecentIncidents,
+    staleTime: Infinity,
+  });
+
+  const { data: incidentsByStatus = [], error: statusError, isLoading: statusLoading } = useQuery({
+    queryKey: ['incidentsByStatus'],
+    queryFn: fetchIncidentsByStatusWeekAndMonthly,
     staleTime: Infinity,
   });
 
@@ -81,6 +101,7 @@ export const useIncidents = () => {
   return {
     incidents,
     recentIncidents,
+    incidentsByStatus,
     drawerVisible,
     statusHistory,
     selectedIncident,
@@ -88,7 +109,9 @@ export const useIncidents = () => {
     closeDrawer,
     error,
     recentError,
+    statusError,
     isLoading,
     recentLoading,
+    statusLoading,
   };
 };
