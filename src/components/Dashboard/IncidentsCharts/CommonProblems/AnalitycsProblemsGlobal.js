@@ -1,6 +1,6 @@
 import React from "react"
 import { Row, Col, Typography, List, Card, Divider } from "antd"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, CartesianGrid, XAxis, YAxis, Bar } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts"
 import { useIncidents } from '../../../../hooks/IncidentsHooks/Incidents.hooks';
 
 const { Title, Paragraph } = Typography

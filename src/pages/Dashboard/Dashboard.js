@@ -6,7 +6,6 @@ import {
   Row,
   Col,
   Card,
-  List,
   Button,
   Tabs,
   Select,
