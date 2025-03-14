@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Tooltip as AntTooltip, Button } from "antd";
 import { ResponsiveContainer, AreaChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Area } from "recharts";
 import { HelpCircle } from "lucide-react";
-import { useIncidents } from '../../../hooks/IncidentsHooks/Incidents.hooks';
+import { useIncidents } from '../../../../hooks/IncidentsHooks/Incidents.hooks';
 
 const IncidentComparison = () => {
   const { incidentsByStatus } = useIncidents();

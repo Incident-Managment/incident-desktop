@@ -59,6 +59,9 @@ const MainLayout = () => {
         width={240}
         theme="light"
         css={css`
+          position: fixed;
+          height: 100vh;
+          overflow: auto;
           @media (max-width: 768px) {
             display: none;
           }
@@ -92,7 +95,7 @@ const MainLayout = () => {
       >
         <DashboardMenu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
       </Drawer>
-      <Layout>
+      <Layout css={css`margin-left: 240px;`}>
         <Header
           css={css`
             background: #fff;

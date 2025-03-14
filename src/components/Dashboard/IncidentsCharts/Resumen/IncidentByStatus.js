@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Radio, Row, Col, Card, Statistic } from 'antd';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
-import { useIncidents } from '../../../hooks/IncidentsHooks/Incidents.hooks';
+import { useIncidents } from '../../../../hooks/IncidentsHooks/Incidents.hooks';
 
 const { Title } = Typography;
 

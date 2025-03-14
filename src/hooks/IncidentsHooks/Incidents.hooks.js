@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly } from '../../services/incident.services';
+import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory } from '../../services/incident.services';
 
 export const useIncidents = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -63,6 +63,34 @@ export const useIncidents = () => {
     return response;
   };
 
+  const fetchMonthlyEvolution = async () => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      throw new Error('User data not found in cache');
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id) {
+      throw new Error('Invalid company data in cache');
+    }
+    const companyId = parsedUser.user.company.id;
+    const response = await getMonthlyEvolution(companyId);
+    return response.incidentsData;
+  };
+
+  const fetchMostCommonProblemsByCategory = async () => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      throw new Error('User data not found in cache');
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id) {
+      throw new Error('Invalid company data in cache');
+    }
+    const companyId = parsedUser.user.company.id;
+    const response = await getMostCommonProblemsByCategory(companyId);
+    return response;
+  };
+
   const { data: incidents = [], error, isLoading } = useQuery({
     queryKey: ['incidents'],
     queryFn: fetchIncidents,
@@ -78,6 +106,18 @@ export const useIncidents = () => {
   const { data: incidentsByStatus = [], error: statusError, isLoading: statusLoading } = useQuery({
     queryKey: ['incidentsByStatus'],
     queryFn: fetchIncidentsByStatusWeekAndMonthly,
+    staleTime: Infinity,
+  });
+
+  const { data: monthlyEvolution = {}, error: monthlyEvolutionError, isLoading: monthlyEvolutionLoading } = useQuery({
+    queryKey: ['monthlyEvolution'],
+    queryFn: fetchMonthlyEvolution,
+    staleTime: Infinity,
+  });
+
+  const { data: mostCommonProblems = {}, error: mostCommonProblemsError, isLoading: mostCommonProblemsLoading } = useQuery({
+    queryKey: ['mostCommonProblems'],
+    queryFn: fetchMostCommonProblemsByCategory,
     staleTime: Infinity,
   });
 
@@ -102,6 +142,8 @@ export const useIncidents = () => {
     incidents,
     recentIncidents,
     incidentsByStatus,
+    monthlyEvolution,
+    mostCommonProblems,
     drawerVisible,
     statusHistory,
     selectedIncident,
@@ -110,8 +152,12 @@ export const useIncidents = () => {
     error,
     recentError,
     statusError,
+    monthlyEvolutionError,
+    mostCommonProblemsError,
     isLoading,
     recentLoading,
     statusLoading,
+    monthlyEvolutionLoading,
+    mostCommonProblemsLoading,
   };
 };

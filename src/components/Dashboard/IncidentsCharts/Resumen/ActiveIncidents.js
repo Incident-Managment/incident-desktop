@@ -1,7 +1,7 @@
 import React from "react";
-import { List, Avatar, Tag, Typography } from "antd";
+import { List, Avatar, Tag, Typography, Card } from "antd";
 import { AlertCircle, CheckCircle, Clock, Activity } from "lucide-react";
-import { useIncidents } from "../../../hooks/IncidentsHooks/Incidents.hooks";
+import { useIncidents } from "../../../../hooks/IncidentsHooks/Incidents.hooks";
 
 const { Text } = Typography;
 
@@ -45,11 +45,12 @@ const ActiveIncidents = () => {
         .sort((a, b) => new Date(b.update_date) - new Date(a.update_date));
 
     return (
+        <Card title="Incidencias Activas" className="active-incidents-card">
         <List
             className="active-incidents-list"
             itemLayout="horizontal"
             dataSource={activeIncidents}
-            style={{ maxHeight: '400px', overflowY: 'auto' }}
+            style={{ maxHeight: '345px', overflowY: 'auto' }}
             renderItem={(item) => (
                 <List.Item
                     actions={[
@@ -89,6 +90,7 @@ const ActiveIncidents = () => {
                 </List.Item>
             )}
         />
+    </Card>
     );
 };
 

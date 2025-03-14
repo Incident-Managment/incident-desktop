@@ -84,3 +84,24 @@ export const getIncidentByStatusWeekAndMonthly = async (companyId) => {
         throw error;
     }
 }
+
+export const getMonthlyEvolution = async (companyId) => {
+    try {
+        const countIncidentsByCompany = await fetchData(`incidents/monthlyEvolution?companyId=${companyId}`);
+        return countIncidentsByCompany;
+    }
+    catch (error) {
+        console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}
+
+export const getMostCommonProblemsByCategory = async (companyId) => {
+    try {
+        const countIncidentsByCompany = await fetchData(`incidents/mostCommonProblemsByCategory?companyId=${companyId}`);
+        return countIncidentsByCompany;
+    }catch (error) {
+        console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}
