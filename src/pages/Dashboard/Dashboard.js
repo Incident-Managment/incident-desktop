@@ -6,7 +6,6 @@ import {
   Row,
   Col,
   Card,
-  Button,
   Tabs,
   Select,
 } from "antd"
@@ -23,9 +22,6 @@ import {
   Tooltip,
   Legend,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
   ResponsiveContainer,
   ComposedChart,
 } from "recharts"
@@ -38,6 +34,7 @@ import ActiveIncidents from "../../components/Dashboard/IncidentsCharts//Resumen
 import IncidentComparison from "../../components/Dashboard/IncidentsCharts/Resumen/IncidentComparation"
 import MonthlyEvolutionChart from "../../components/Dashboard/IncidentsCharts/Tendencies/MonthlyEvolution";
 import CommonIssuesAnalysis from "../../components/Dashboard/IncidentsCharts/CommonProblems/AnalitycsProblemsGlobal";
+import CommonIssuesCard from "../../components/Dashboard/IncidentsCharts/Resumen/CommonIssuesCard"
 
 dayjs.locale("es")
 
@@ -60,45 +57,8 @@ const yearlyComparison = [
   { month: "Dic", actual: 0, anterior: 150 },
 ]
 
-const commonIssuesData = [
-  {
-    name: "Error de Sistema",
-    value: 31,
-    color: "#1890ff",
-    description: "Fallos en el sistema operativo o aplicaciones principales",
-  },
-  {
-    name: "Fallo de Hardware",
-    value: 23,
-    color: "#13c2c2",
-    description: "Problemas con equipos físicos como ordenadores o impresoras",
-  },
-  {
-    name: "Problemas de Red",
-    value: 23,
-    color: "#fa8c16",
-    description: "Fallos de conectividad o acceso a recursos compartidos",
-  },
-  {
-    name: "Error de Software",
-    value: 15,
-    color: "#f5222d",
-    description: "Bugs o problemas con aplicaciones específicas",
-  },
-  {
-    name: "Problemas de Usuario",
-    value: 8,
-    color: "#722ed1",
-    description: "Errores de configuración o uso incorrecto",
-  },
-]
-
-
-
 const Dashboard = () => {
   const [viewMode, setViewMode] = useState("weekly")
-
-
 
   const renderYearlyComparison = () => {
     return (
@@ -176,36 +136,7 @@ const Dashboard = () => {
                 </Col>
 
                 <Col xs={24} lg={8}>
-                  <Card
-                    title="Problemas Más Comunes del Dia de Hoy"
-                    className="chart-card"
-                    extra={
-                      <Button type="link" onClick={() => { }}>
-                        Ver detalles
-                      </Button>
-                    }
-                  >
-                    <ResponsiveContainer width="100%" height={300}>
-                      <PieChart>
-                        <Pie
-                          data={commonIssuesData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {commonIssuesData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip formatter={(value) => [`${value} incidencias`, "Cantidad"]} />
-                        <Legend />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </Card>
+                  <CommonIssuesCard />
                 </Col>
               </Row>
 

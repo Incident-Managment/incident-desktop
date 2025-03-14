@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory } from '../../services/incident.services';
+import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday } from '../../services/incident.services';
 
 export const useIncidents = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -91,6 +91,20 @@ export const useIncidents = () => {
     return response;
   };
 
+  const fetchCommonProblemsPercentageToday = async () => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      throw new Error('User data not found in cache');
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id) {
+      throw new Error('Invalid company data in cache');
+    }
+    const companyId = parsedUser.user.company.id;
+    const response = await getCommonProblemsPercentageToday(companyId);
+    return response;
+  };
+
   const { data: incidents = [], error, isLoading } = useQuery({
     queryKey: ['incidents'],
     queryFn: fetchIncidents,
@@ -118,6 +132,12 @@ export const useIncidents = () => {
   const { data: mostCommonProblems = {}, error: mostCommonProblemsError, isLoading: mostCommonProblemsLoading } = useQuery({
     queryKey: ['mostCommonProblems'],
     queryFn: fetchMostCommonProblemsByCategory,
+    staleTime: Infinity,
+  });
+
+  const { data: commonProblemsPercentageToday = {}, error: commonProblemsError, isLoading: commonProblemsLoading } = useQuery({
+    queryKey: ['commonProblemsPercentageToday'],
+    queryFn: fetchCommonProblemsPercentageToday,
     staleTime: Infinity,
   });
 
@@ -159,5 +179,8 @@ export const useIncidents = () => {
     statusLoading,
     monthlyEvolutionLoading,
     mostCommonProblemsLoading,
+    commonProblemsPercentageToday,
+    commonProblemsError,
+    commonProblemsLoading,
   };
 };

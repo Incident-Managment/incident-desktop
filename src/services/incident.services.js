@@ -105,3 +105,13 @@ export const getMostCommonProblemsByCategory = async (companyId) => {
         throw error;
     }
 }
+
+export const getCommonProblemsPercentageToday = async (companyId) => {
+    try{
+        const countIncidentsByCompany = await fetchData(`incidents/commonProblemsPercentageToday?companyId=${companyId}`);
+        return countIncidentsByCompany;
+    }catch(error){
+        console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}
