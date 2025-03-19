@@ -1,11 +1,14 @@
+// App.js
+import React from 'react';
 import AppRoutes from './routes/AppRoutes';
+import { UserProvider } from './providers/users/UserContext';
 
-const App = () => {
-  return (
-    <div className="App">
+const App = () => (
+  <React.StrictMode>
+    <UserProvider>
       <AppRoutes />
-    </div>
-  );
-};
+    </UserProvider>
+  </React.StrictMode>
+);
 
 export default App;

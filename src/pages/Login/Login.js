@@ -5,23 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import '../../assets/styles/Login/Login.css';
 import useLogin from '../../hooks/Login.hooks';
 import { UserContext } from '../../providers/users/UserContext';
-import withUserProvider from '../../providers/users/WithUserProvider';
 
 const { Title, Text, Link } = Typography;
 
 const Login = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const { loginUser } = useContext(UserContext);
   const { loading, error, handleLogin } = useLogin(loginUser);
-  const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    await handleLogin(values.email, values.password);
-    if (error) {
-      message.error(error);
-    } else {
+    const success = await handleLogin(values.email, values.password);
+    if (success) {
       message.success('Login successful');
-      navigate('/dashboard'); // Redirige al dashboard
+      navigate('/dashboard'); // Redirige al dashboard después del login
+    } else {
+      message.error(error || 'Login failed');
     }
   };
 
@@ -79,28 +78,14 @@ const Login = () => {
 
           <div className="login-footer">
             <Text className="login-footer-text">Don't have an account? </Text>
-            <Link href="#" className="login-footer-link">
+            <Link href="/register" className="login-footer-link">
               Sign up
             </Link>
           </div>
         </div>
       </div>
-
-      <div className="login-background">
-        <div className="login-background-inner">
-          <div className="login-background-blur" />
-          <div className="login-background-content">
-            <div className="login-background-icon">
-              <MailOutlined />
-            </div>
-          </div>
-        </div>
-
-        <div className="login-background-blur-top-right" />
-        <div className="login-background-blur-bottom-left" />
-      </div>
     </div>
   );
 };
 
-export default withUserProvider(Login);
+export default Login;

@@ -49,34 +49,39 @@ export const useProductionPhases = (companyId) => {
     },
   });
 
-  const handleUpdatePhase = async (selectedPhase) => {
-    console.log("handleUpdatePhase called");
-    if (!selectedPhase) {
+  const handleUpdatePhase = async (updatedPhase) => {
+    console.log("handleUpdatePhase called", updatedPhase);
+    if (!updatedPhase) {
       console.log("No phase selected");
       return;
     }
   
     const updatedData = {
-      id: selectedPhase.id,
-      name: newName.trim() !== "" ? newName : selectedPhase.name,
-      phase_order: newOrder !== "" ? parseInt(newOrder, 10) : selectedPhase.phase_order,
+      id: updatedPhase.id,
+      name: newName.trim() !== "" ? newName : updatedPhase.name,
       is_active: newActive,
     };
   
-    console.log("Updated data:", updatedData);
+    console.log("Updated data before mutation:", updatedData);
   
     if (
-      updatedData.name === selectedPhase.name &&
-      updatedData.phase_order === selectedPhase.phase_order &&
-      updatedData.is_active === selectedPhase.is_active
+      updatedData.name === updatedPhase.name &&
+      updatedData.is_active === updatedPhase.is_active
     ) {
       console.log("No changes detected");
       return;
     }
   
-    updatePhaseMutation.mutate(updatedData);
+    updatePhaseMutation.mutate(updatedData, {
+      onSuccess: () => {
+        console.log("Update successful");
+      },
+      onError: (error) => {
+        console.error("Update failed", error);
+      },
+    });
   };
-
+  
   const handleAddMachineToPhase = async () => {
     if (!selectedPhase || !selectedMachine) {
       console.log("No phase or machine selected");
@@ -142,7 +147,6 @@ export const useCreateProductionPhase = (companyId) => {
   const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newPhaseName, setNewPhaseName] = useState("");
-  const [newPhaseOrder, setNewPhaseOrder] = useState("");
   const [newPhaseActive, setNewPhaseActive] = useState(true);
 
   const createPhaseMutation = useMutation({
@@ -160,7 +164,6 @@ export const useCreateProductionPhase = (companyId) => {
   const handleCreatePhase = () => {
     const data = {
       name: newPhaseName,
-      phase_order: parseInt(newPhaseOrder, 10),
       company_id: companyId,
       is_active: newPhaseActive,
     };
@@ -172,8 +175,6 @@ export const useCreateProductionPhase = (companyId) => {
     setIsModalVisible,
     newPhaseName,
     setNewPhaseName,
-    newPhaseOrder,
-    setNewPhaseOrder,
     newPhaseActive,
     setNewPhaseActive,
     handleCreatePhase,

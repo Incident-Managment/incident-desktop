@@ -1,48 +1,17 @@
 import React, { useState } from "react";
-import { Card, Typography, Button, Input, Switch, List, Collapse, Tooltip, Spin, Select } from "antd";
-import { Circle, ChevronDown, ChevronUp, Settings, Plus } from "lucide-react";
+import { Table, Typography, Button, Input, Switch, Spin } from "antd";
+import { Circle, ChevronDown, ChevronUp } from "lucide-react";
 import styled from "styled-components";
-import { useProductionPhases, usePhasesAndMachines } from "../../hooks/ProductionHooks/production.hooks";
+import { useProductionPhases } from "../../hooks/ProductionHooks/production.hooks";
 import CreateProductionPhaseModal from "../../components/Production/createProductionPhase";
 
-const { Title, Text} = Typography;
-const { Panel } = Collapse;
-const { Option } = Select;
+const { Title, Text } = Typography;
 
-// Estilos
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
   min-height: 100vh;
-`;
-
-const TimelineContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const PhaseCard = styled(Card)`
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-`;
-
-const PhaseHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background-color: #2668ff; /* Cambiado a un azul más oscuro */
-  color: white;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
 `;
 
 const PhaseIcon = styled.div`
@@ -53,22 +22,8 @@ const PhaseIcon = styled.div`
   height: 40px;
   border-radius: 50%;
   background-color: white;
-  color: #2668ff; /* Cambiado a un azul más oscuro */
+  color: #2668ff;
   margin-right: 16px;
-`;
-
-const PhaseDetails = styled.div`
-  padding: 16px;
-`;
-
-const MachinesList = styled(List)`
-  margin-top: 16px;
-`;
-
-const StyledCollapse = styled(Collapse)`
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
 `;
 
 export default function ProductionTimelineEnhanced() {
@@ -79,29 +34,18 @@ export default function ProductionTimelineEnhanced() {
     phases,
     selectedPhase,
     newName,
-    newOrder,
     newActive,
     setSelectedPhase,
     setNewName,
     setNewOrder,
     setNewActive,
     handleUpdatePhase,
-    handleAddMachineToPhase,
     error,
     isLoading,
-    machines,
-    isLoadingMachines,
-    selectedMachine,
-    setSelectedMachine,
   } = useProductionPhases(companyId);
 
   const [expandedPhase, setExpandedPhase] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const { phasesAndMachines, isLoadingPhasesAndMachines } = usePhasesAndMachines(
-    expandedPhase,
-    companyId,
-  );
 
   const handlePhaseClick = (phaseId) => {
     if (expandedPhase === phaseId) {
@@ -116,6 +60,18 @@ export default function ProductionTimelineEnhanced() {
     }
   };
 
+  const handleToggleActive = (checked) => {
+    setNewActive(checked);
+  };
+
+  const handleSaveChanges = () => {
+    handleUpdatePhase({
+      ...selectedPhase,
+      name: newName,
+      is_active: newActive,
+    });
+  };
+
   if (error)
     return (
       <Container>
@@ -123,108 +79,84 @@ export default function ProductionTimelineEnhanced() {
       </Container>
     );
 
+  const columns = [
+    {
+      title: "Fase de Producción",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <PhaseIcon>
+            <Circle size={24} />
+          </PhaseIcon>
+          <span style={{ cursor: "pointer" }} onClick={() => handlePhaseClick(record.id)}>
+            {text}
+          </span>
+        </div>
+      ),
+    },
+    {
+      title: "Estado",
+      dataIndex: "is_active",
+      key: "is_active",
+      render: (isActive, record) => (
+        <Switch
+          checked={record.id === expandedPhase ? newActive : isActive}
+          onChange={handleToggleActive}
+          disabled={record.id !== expandedPhase}
+        />
+      ),
+    },
+    {
+      title: "Acciones",
+      key: "actions",
+      render: (text, record) => (
+        <Button
+          type="text"
+          icon={expandedPhase === record.id ? <ChevronUp /> : <ChevronDown />}
+          onClick={() => handlePhaseClick(record.id)}
+        />
+      ),
+    },
+  ];
+
+  const expandedRowRender = () => (
+    <div style={{ padding: 16 }}>
+      <div style={{ marginBottom: 16 }}>
+        <Text strong>Nombre: </Text>
+        <Input
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          style={{ width: 200 }}
+        />
+      </div>
+      <Button type="primary" onClick={handleSaveChanges}>
+        Guardar Cambios
+      </Button>
+    </div>
+  );
+
   return (
     <Container>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Title>Línea Temporal de Producción</Title>
         <Button type="primary" onClick={() => setIsModalVisible(true)} style={{ marginTop: 15 }}>
           Añadir Fase de Producción
         </Button>
       </div>
-      <TimelineContainer>
-        {isLoading ? (
-          <Spin size="large" />
-        ) : (
-          phases.map((phase) => (
-            <PhaseCard key={phase.id}>
-              <PhaseHeader>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <PhaseIcon>
-                    <Circle size={24} />
-                  </PhaseIcon>
-                  <Title level={4} style={{ color: "white", margin: 0 }}>
-                    {phase.name}
-                  </Title>
-                </div>
-                <Button
-                  type="text"
-                  icon={expandedPhase === phase.id ? <ChevronUp color="white" /> : <ChevronDown color="white" />}
-                  onClick={() => handlePhaseClick(phase.id)}
-                />
-              </PhaseHeader>
-              <StyledCollapse activeKey={expandedPhase === phase.id ? ["1"] : []}>
-                <Panel key="1" showArrow={false}>
-                  <PhaseDetails>
-                    <div style={{ marginBottom: 16 }}>
-                      <Text strong>Orden: </Text>
-                      <Input
-                        type="number"
-                        value={newOrder}
-                        onChange={(e) => setNewOrder(e.target.value)}
-                        style={{ width: 100 }}
-                      />
-                    </div>
-                    <div style={{ marginBottom: 16 }}>
-                      <Text strong>Estado: </Text>
-                      <Switch checked={newActive} onChange={(checked) => setNewActive(checked)} />
-                    </div>
-                    <div style={{ marginBottom: 16 }}>
-                      <Text strong>Nombre: </Text>
-                      <Input value={newName} onChange={(e) => setNewName(e.target.value)} style={{ width: 200 }} />
-                    </div>
-                    <Button
-                      type="primary"
-                      onClick={() => {
-                        handleUpdatePhase(selectedPhase);
-                      }}
-                    >
-                      Guardar Cambios
-                    </Button>
-                  </PhaseDetails>
-                  <MachinesList
-                    header={<Title level={5}>Máquinas Asignadas</Title>}
-                    loading={isLoadingPhasesAndMachines}
-                    dataSource={phasesAndMachines}
-                    renderItem={(item) => (
-                      <List.Item
-                        key={item.id}
-                        actions={[
-                          <Tooltip title="Configurar máquina" key="config">
-                            <Button icon={<Settings size={16} />} />
-                          </Tooltip>,
-                        ]}
-                      >
-                        <List.Item.Meta title={item.machine_name} />
-                      </List.Item>
-                    )}
-                  />
-                  <Select
-                    placeholder="Seleccionar máquina"
-                    style={{ width: 200, marginTop: 16 }}
-                    onChange={(value) => setSelectedMachine(value)}
-                    loading={isLoadingMachines}
-                  >
-                    {machines.map((machine) => (
-                      <Option key={machine.name} value={machine.id}>
-                        {machine.name}
-                      </Option>
-                    ))}
-                  </Select>
-                  <Button
-                    type="dashed"
-                    icon={<Plus size={16} />}
-                    style={{ marginTop: 16 }}
-                    onClick={handleAddMachineToPhase}
-                    disabled={!selectedMachine}
-                  >
-                    Añadir Máquina
-                  </Button>
-                </Panel>
-              </StyledCollapse>
-            </PhaseCard>
-          ))
-        )}
-      </TimelineContainer>
+      {isLoading ? (
+        <Spin size="large" />
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={phases}
+          rowKey="id"
+          expandable={{
+            expandedRowRender,
+            expandedRowKeys: expandedPhase ? [expandedPhase] : [],
+          }}
+        />
+      )}
       <CreateProductionPhaseModal
         companyId={companyId}
         isVisible={isModalVisible}

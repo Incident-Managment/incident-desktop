@@ -4,12 +4,14 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const cachedUser = localStorage.getItem('user');
     if (cachedUser) {
       setUser(JSON.parse(cachedUser));
     }
+    setIsLoading(false);
   }, []);
 
   const loginUser = (userData) => {
@@ -23,7 +25,7 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+    <UserContext.Provider value={{ user, isLoading, loginUser, logoutUser }}>
       {children}
     </UserContext.Provider>
   );

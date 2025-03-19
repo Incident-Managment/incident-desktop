@@ -10,9 +10,11 @@ const useLogin = (onLoginSuccess) => {
     setError(null);
     try {
       const userData = await login(email, password);
-      onLoginSuccess(userData); // Llama a la función de callback con los datos del usuario
+      onLoginSuccess(userData);
+      return true;
     } catch (err) {
       setError(err.message);
+      return false;
     } finally {
       setLoading(false);
     }

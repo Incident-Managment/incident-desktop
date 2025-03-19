@@ -6,8 +6,6 @@ const CreateProductionPhaseModal = ({ companyId, isVisible, onClose }) => {
   const {
     newPhaseName,
     setNewPhaseName,
-    newPhaseOrder,
-    setNewPhaseOrder,
     newPhaseActive,
     setNewPhaseActive,
     handleCreatePhase,
@@ -32,14 +30,6 @@ const CreateProductionPhaseModal = ({ companyId, isVisible, onClose }) => {
           placeholder="Nombre de la Fase"
           value={newPhaseName}
           onChange={(e) => setNewPhaseName(e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <Input
-          type="number"
-          placeholder="Orden de la Fase"
-          value={newPhaseOrder}
-          onChange={(e) => setNewPhaseOrder(e.target.value)}
         />
       </div>
       <div style={{ marginBottom: 16 }}>
