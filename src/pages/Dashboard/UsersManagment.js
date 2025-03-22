@@ -8,7 +8,7 @@ import { formatDate } from '../../utils/date-format';
 const { Title } = Typography;
 
 const UserManagement = () => {
-  const { data: users, isLoading, error } = useGetUsers();
+  const { data: users } = useGetUsers();
   const [setSearchText] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -130,9 +130,6 @@ const UserManagement = () => {
       ),
     },
   ];
-
-  if (isLoading) return <div>Cargando...</div>;
-  if (error) return <div>Error al cargar los datos</div>;
 
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>

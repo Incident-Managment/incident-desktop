@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button } from 'antd';
 import { formatDistanceToNow, subDays, subMonths, isAfter } from 'date-fns';
-import { AlertCircle, CheckCircle2, FileText, UserCheck } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileText, UserCheck, Ban} from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 import AssignTaskPopover from '../../components/Dashboard/Options';
 
@@ -135,12 +135,15 @@ export default function Incidents() {
           {record.status === 'En Espera' && !record.assigned_task && (
             <Tooltip title="Asignar tarea">
               <AssignTaskPopover incidentId={record.id} companyId={record.company_id}>
-                <Button type="text" icon={<UserCheck size={18} />} />
+                  <Button type="text" icon={<UserCheck size={18} />} />
               </AssignTaskPopover>
             </Tooltip>
           )}
           <Tooltip title="Ver historial">
             <Button type="text" icon={<FileText size={18} />} onClick={() => openDrawer(record.id)} />
+          </Tooltip>
+          <Tooltip title="Cancelar Incidencia">
+            <Button type="text" icon={<Ban size={18} />} />
           </Tooltip>
         </Space>
       ),

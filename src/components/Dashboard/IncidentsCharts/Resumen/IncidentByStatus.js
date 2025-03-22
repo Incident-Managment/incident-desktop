@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, Radio, Row, Col, Card, Statistic } from 'antd';
 import { ResponsiveContainer, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
 import { useIncidents } from '../../../../hooks/IncidentsHooks/Incidents.hooks';
@@ -8,6 +8,11 @@ const { Title } = Typography;
 const IncidencesByStatus = ({ viewMode, setViewMode }) => {
   const [data, setData] = useState([]);
   const { incidentsByStatus } = useIncidents();
+
+  const monthsOrder = useMemo(() => [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ], []);
 
   useEffect(() => {
     if (incidentsByStatus && incidentsByStatus.incidentsData) {
@@ -37,10 +42,12 @@ const IncidencesByStatus = ({ viewMode, setViewMode }) => {
           };
         }
       });
+
       const flattenedData = transformedData.flat();
+      flattenedData.sort((a, b) => monthsOrder.indexOf(a.label.split(' ')[0]) - monthsOrder.indexOf(b.label.split(' ')[0]));
       setData(flattenedData);
     }
-  }, [viewMode, incidentsByStatus]);
+  }, [viewMode, incidentsByStatus, monthsOrder]);
 
   const labelKey = 'label';
 

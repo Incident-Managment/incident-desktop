@@ -56,8 +56,10 @@ const UserProfile = () => {
                         <Avatar
                             size={100}
                             style={{
-                                border: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',
-                                background: 'linear-gradient(135deg, #1890ff 0%, #1c39bb 100%)',
+                                backgroundColor: '#1890ff',
+                                fontSize: 32,
+                                fontWeight: 500,
+                                marginTop: 16,
                             }}
                         >
                             <div

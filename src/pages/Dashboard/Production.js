@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Typography, Button, Input, Switch, Spin } from "antd";
+import { Table, Typography, Button, Input, Switch } from "antd";
 import { Circle, ChevronDown, ChevronUp } from "lucide-react";
 import styled from "styled-components";
 import { useProductionPhases } from "../../hooks/ProductionHooks/production.hooks";
@@ -29,7 +29,6 @@ export default function ProductionTimelineEnhanced() {
     setNewOrder,
     setNewActive,
     handleUpdatePhase,
-    isLoading,
   } = useProductionPhases(companyId);
 
   const [expandedPhase, setExpandedPhase] = useState(null);
@@ -126,9 +125,6 @@ export default function ProductionTimelineEnhanced() {
         </Button>
       </div>
       
-      {isLoading ? (
-        <Spin size="large" />
-      ) : (
         <StyledTable
           columns={columns}
           dataSource={phases}
@@ -138,7 +134,7 @@ export default function ProductionTimelineEnhanced() {
             expandedRowKeys: expandedPhase ? [expandedPhase] : [],
           }}
         />
-      )}
+
 
       <CreateProductionPhaseModal
         companyId={companyId}

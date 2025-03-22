@@ -32,10 +32,20 @@ export const createMachines = async (data) => {
 
 export const getMachineTypes = async () => {
     try {
-        const machineTypes = await fetchData("machines/findMachineTypes");
+        const machineTypes = await fetchData("machine_types/findMachineTypes");
         return machineTypes;
     } catch (error) {
         console.error("Error fetching machine types:", error.message);
+        throw error;
+    }
+}
+
+export const createMachineTypes = async (data) => {
+    try {
+        const machineTypes = await postData("machines/createMachineType", data);
+        return machineTypes;
+    } catch (error) {
+        console.error("Error creating machine type:", error.message);
         throw error;
     }
 }
