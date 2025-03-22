@@ -1,15 +1,18 @@
 "use client"
 
-import { useState } from "react"
-import { Typography, List, Card, Spin, Result, Space, Tag, Modal, Button, Tooltip } from "antd"
+import { useState, useRef } from "react"
+import { Typography, Table, Spin, Result, Space, Tag, Modal, Button, Tooltip } from "antd"
 import { useMachinesByCompany } from "../../hooks/MachinesHooks/companyMachines.hooks"
 import QRCode from "react-qr-code"
+import jsPDF from "jspdf"
+import html2canvas from "html2canvas"
 
 const { Title, Text } = Typography
 
 const CompanyMachines = () => {
   const { data: machines, isLoading, error } = useMachinesByCompany()
   const [selectedMachine, setSelectedMachine] = useState(null)
+  const pdfRef = useRef(null)
 
   if (isLoading) {
     return (
@@ -42,65 +45,87 @@ const CompanyMachines = () => {
     return colors[id % colors.length]
   }
 
+  const generatePDF = async () => {
+    if (!pdfRef.current) return
+    const canvas = await html2canvas(pdfRef.current)
+    const imgData = canvas.toDataURL("image/png")
+    const pdf = new jsPDF()
+    pdf.addImage(imgData, "PNG", 10, 10, 180, 0)
+    pdf.save(`Machine_${selectedMachine.id}.pdf`)
+  }
+
+  const columns = [
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, machine) => (
+        <Space>
+          <Text strong>{text}</Text>
+          <Tooltip title={`Status: ${getStatusColor(machine.id)}`}>
+            <div className={`w-3 h-3 rounded-full bg-${getStatusColor(machine.id)}-500`} />
+          </Tooltip>
+        </Space>
+      )
+    },
+    {
+      title: 'Type',
+      dataIndex: ['type', 'name'],
+      key: 'type',
+      render: (text) => <Tag color="blue">{text}</Tag>
+    },
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Company',
+      dataIndex: ['company', 'name'],
+      key: 'company',
+      render: (text) => <Text type="secondary" className="truncate">{text}</Text>
+    }
+  ]
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <Title level={2} className="mb-6 text-center">
         Company Machines
       </Title>
-      <List
-        grid={{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 3, xl: 4, xxl: 4 }}
+      <Table
+        columns={columns}
         dataSource={machines}
-        renderItem={(machine) => (
-          <List.Item>
-            <Card
-              hoverable
-              className="w-full shadow-md transition-all duration-300 hover:shadow-xl"
-              onClick={() => handleMachineClick(machine)}
-            >
-              <Card.Meta
-                title={
-                  <Space>
-                    <Text strong>{machine.name}</Text>
-                    <Tooltip title={`Status: ${getStatusColor(machine.id)}`}>
-                      <div className={`w-3 h-3 rounded-full bg-${getStatusColor(machine.id)}-500`} />
-                    </Tooltip>
-                  </Space>
-                }
-                description={
-                  <Space direction="vertical" className="w-full">
-                    <Tag color="blue">{machine.type.name}</Tag>
-                    <Text type="secondary">ID: {machine.id}</Text>
-                    <Text type="secondary" className="truncate">
-                      Company: {machine.company.name}
-                    </Text>
-                  </Space>
-                }
-              />
-            </Card>
-          </List.Item>
-        )}
+        rowKey="id"
+        onRow={(machine) => ({
+          onClick: () => handleMachineClick(machine)
+        })}
       />
       <Modal
         title={selectedMachine?.name}
         visible={!!selectedMachine}
         onCancel={closeModal}
         footer={[
-          <Button key="close" onClick={closeModal} type="primary">
+          <Button key="close" onClick={closeModal} type="default">
             Close
           </Button>,
+          <Button key="print" onClick={generatePDF} type="primary">
+            Print PDF
+          </Button>
         ]}
         centered
-        bodyStyle={{ padding: '20px' }}
+        style={{ body: { padding: '20px' } }}
       >
         {selectedMachine && (
-          <Space direction="vertical" className="w-full" size="large">
-            <Text strong>Type: {selectedMachine.type.name}</Text>
-            <Text>ID: {selectedMachine.id}</Text>
-            <Text>Company: {selectedMachine.company.name}</Text>
-            <div className="flex justify-center mt-4">
-              <QRCode value={String(selectedMachine.id)} size={256} />
-            </div>
-          </Space>
+          <div ref={pdfRef} className="p-4 bg-white">
+            <Space direction="vertical" className="w-full" size="large">
+              <Text strong>Type: {selectedMachine.type.name}</Text>
+              <Text>ID: {selectedMachine.id}</Text>
+              <Text>Company: {selectedMachine.company.name}</Text>
+              <div className="flex justify-center mt-4">
+                <QRCode value={String(selectedMachine.id)} size={256} />
+              </div>
+            </Space>
+          </div>
         )}
       </Modal>
     </div>

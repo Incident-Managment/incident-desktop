@@ -1,4 +1,4 @@
-import { fetchData } from "../config/api";
+import { fetchData, postData } from "../config/api";
 
 export const getMachinesByCompany = async (companyId) => {
     try {
@@ -19,6 +19,26 @@ export const getMachinesByType = async (typeId) => {
         throw error;
     }
 };
+
+export const createMachines = async (data) => {
+    try {
+        const machines = await postData("machines/createMachines", data);
+        return machines;
+    } catch (error) {
+        console.error("Error creating machine:", error.message);
+        throw error;
+    }
+}
+
+export const getMachineTypes = async () => {
+    try {
+        const machineTypes = await fetchData("machines/findMachineTypes");
+        return machineTypes;
+    } catch (error) {
+        console.error("Error fetching machine types:", error.message);
+        throw error;
+    }
+}
 
 export const getCompaniesGlobal = async () => {
     try {

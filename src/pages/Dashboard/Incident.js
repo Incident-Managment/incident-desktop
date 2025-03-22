@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button } from 'antd';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, subDays, subMonths, isAfter } from 'date-fns';
 import { AlertCircle, CheckCircle2, FileText, UserCheck } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 import AssignTaskPopover from '../../components/Dashboard/Options';
@@ -26,26 +26,18 @@ const getStatusColor = (status) => {
   }
 };
 
-const statusPriority = {
-  'En Espera': 1,
-  'En Progreso': 2,
-  'Resuelto': 3,
-};
-
-const priorityOrder = {
-  'Alta': 1,
-  'Media': 2,
-  'Baja': 3,
-};
-
 export default function Incidents() {
   const { incidents, drawerVisible, statusHistory, handleIncidentClick, closeDrawer } = useIncidents();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [filterPriority, setFilterPriority] = useState('');
+  const [filterDateRange, setFilterDateRange] = useState('');
   const [, setSelectedIncident] = useState(null);
 
   const handleSearch = (value) => setSearchTerm(value);
   const handleFilterChange = (value) => setFilterStatus(value);
+  const handlePriorityChange = (value) => setFilterPriority(value);
+  const handleDateRangeChange = (value) => setFilterDateRange(value);
 
   const openDrawer = (incidentId) => {
     setSelectedIncident(incidentId);
@@ -53,16 +45,27 @@ export default function Incidents() {
   };
 
   const filteredIncidents = incidents
-    .filter((incident) =>
-      incident.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterStatus ? incident.status === filterStatus : true)
-    )
-    .sort((a, b) => {
-      if (statusPriority[a.status] !== statusPriority[b.status]) {
-        return statusPriority[a.status] - statusPriority[b.status];
-      }
-      return (priorityOrder[a.priority] || 3) - (priorityOrder[b.priority] || 3);
-    });
+    .filter((incident) => {
+      const matchesSearchTerm = incident.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = filterStatus ? incident.status === filterStatus : true;
+      const matchesPriority = filterPriority ? incident.priority === filterPriority : true;
+      const matchesDateRange = (() => {
+        if (!filterDateRange) return true;
+        const incidentDate = new Date(incident.creation_date);
+        switch (filterDateRange) {
+          case 'today':
+            return isAfter(incidentDate, subDays(new Date(), 1));
+          case 'yesterday':
+            return isAfter(incidentDate, subDays(new Date(), 2)) && !isAfter(incidentDate, subDays(new Date(), 1));
+          case 'lastMonth':
+            return isAfter(incidentDate, subMonths(new Date(), 1));
+          default:
+            return true;
+        }
+      })();
+      return matchesSearchTerm && matchesStatus && matchesPriority && matchesDateRange;
+    })
+    .sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
 
   const columns = [
     {
@@ -154,6 +157,18 @@ export default function Incidents() {
           <Option value="En Espera">En Espera</Option>
           <Option value="En Progreso">En Progreso</Option>
           <Option value="Resuelto">Resuelto</Option>
+        </Select>
+        <Select placeholder="Filtrar por prioridad" onChange={handlePriorityChange} style={{ width: 200 }}>
+          <Option value="">Todas</Option>
+          <Option value="Alta">Alta</Option>
+          <Option value="Media">Media</Option>
+          <Option value="Baja">Baja</Option>
+        </Select>
+        <Select placeholder="Filtrar por fecha" onChange={handleDateRangeChange} style={{ width: 200 }}>
+          <Option value="">Todas</Option>
+          <Option value="today">Hoy</Option>
+          <Option value="yesterday">Ayer</Option>
+          <Option value="lastMonth">Último Mes</Option>
         </Select>
       </div>
       <Table

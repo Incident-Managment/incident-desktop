@@ -7,23 +7,12 @@ import CreateProductionPhaseModal from "../../components/Production/createProduc
 
 const { Title, Text } = Typography;
 
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-  min-height: 100vh;
+const PhaseIcon = styled.div`
+  margin-right: 8px;
 `;
 
-const PhaseIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white;
-  color: #2668ff;
-  margin-right: 16px;
+const StyledTable = styled(Table)`
+  margin-top: 20px;
 `;
 
 export default function ProductionTimelineEnhanced() {
@@ -40,7 +29,6 @@ export default function ProductionTimelineEnhanced() {
     setNewOrder,
     setNewActive,
     handleUpdatePhase,
-    error,
     isLoading,
   } = useProductionPhases(companyId);
 
@@ -71,13 +59,6 @@ export default function ProductionTimelineEnhanced() {
       is_active: newActive,
     });
   };
-
-  if (error)
-    return (
-      <Container>
-        <Text type="danger">Error al cargar las fases de producción</Text>
-      </Container>
-    );
 
   const columns = [
     {
@@ -137,17 +118,18 @@ export default function ProductionTimelineEnhanced() {
   );
 
   return (
-    <Container>
+    <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Title>Línea Temporal de Producción</Title>
         <Button type="primary" onClick={() => setIsModalVisible(true)} style={{ marginTop: 15 }}>
           Añadir Fase de Producción
         </Button>
       </div>
+      
       {isLoading ? (
         <Spin size="large" />
       ) : (
-        <Table
+        <StyledTable
           columns={columns}
           dataSource={phases}
           rowKey="id"
@@ -157,11 +139,12 @@ export default function ProductionTimelineEnhanced() {
           }}
         />
       )}
+
       <CreateProductionPhaseModal
         companyId={companyId}
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
       />
-    </Container>
+    </div>
   );
 }

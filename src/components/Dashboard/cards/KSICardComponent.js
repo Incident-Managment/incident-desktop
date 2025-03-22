@@ -1,24 +1,9 @@
 import React from 'react';
-import { Card, Statistic, Space, Typography } from 'antd';
-import { AlertCircle, CheckCircle, Clock, Activity, TrendingUp, TrendingDown } from 'lucide-react';
+import { Card, Statistic, Typography } from 'antd';
+import { AlertCircle, CheckCircle, Clock, Activity} from 'lucide-react';
 import { useCountIncidentsByCompany } from '../../../hooks/DashboardHooks/counts.hooks';
 
 const { Text } = Typography;
-
-const renderTrend = (value, previousValue, type = "percent") => {
-  const trend = type === "time" ? previousValue > value : value > previousValue;
-  const difference =
-    type === "percent"
-      ? Math.abs(((value - previousValue) / previousValue) * 100).toFixed(1) + "%"
-      : Math.abs(value - previousValue).toFixed(1) + "h";
-
-  return (
-    <Space>
-      {trend ? <TrendingUp size={16} className="trend-up" /> : <TrendingDown size={16} className="trend-down" />}
-      <Text className={trend ? "trend-up" : "trend-down"}>{difference}</Text>
-    </Space>
-  );
-};
 
 const TotalIncidentsCard = () => {
   const { count } = useCountIncidentsByCompany();
@@ -57,7 +42,6 @@ const ResolvedIncidentsCard = () => {
 
 const AverageResolutionTimeCard = () => {
   const { averageResolutionTime } = useCountIncidentsByCompany();
-  const previousAverageResolutionTime = 0;
 
   return (
     <Card className="kpi-card">
@@ -72,10 +56,6 @@ const AverageResolutionTimeCard = () => {
           value={averageResolutionTime.toFixed(2) + "h"}
           valueStyle={{ color: "#faad14", fontSize: "28px" }}
         />
-        <div className="kpi-footer">
-          {renderTrend(averageResolutionTime, previousAverageResolutionTime, "time")}
-          <Text type="secondary">vs. periodo anterior</Text>
-        </div>
       </div>
     </Card>
   );
@@ -83,7 +63,6 @@ const AverageResolutionTimeCard = () => {
 
 const IncidentEfficiencyCard = () => {
   const { incidentEfficiency } = useCountIncidentsByCompany();
-  const previousIncidentEfficiency = 0; // Replace with actual previous value
 
   return (
     <Card className="kpi-card">
@@ -98,10 +77,6 @@ const IncidentEfficiencyCard = () => {
           value={incidentEfficiency.toFixed(2) + "%"}
           valueStyle={{ color: "#722ed1", fontSize: "28px" }}
         />
-        <div className="kpi-footer">
-          {renderTrend(incidentEfficiency, previousIncidentEfficiency)}
-          <Text type="secondary">vs. periodo anterior</Text>
-        </div>
       </div>
     </Card>
   );

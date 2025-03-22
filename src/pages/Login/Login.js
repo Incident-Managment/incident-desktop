@@ -25,12 +25,10 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-page">
+      <div className="background-image"></div>
+      <div className="background-overlay"></div>
       <div className="login-form-container">
-        <div className="login-header">
-          <div>Login</div>
-        </div>
-
         <div className="login-content">
           <div>
             <Title level={2} className="login-title">
