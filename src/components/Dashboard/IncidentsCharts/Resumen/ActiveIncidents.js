@@ -37,12 +37,12 @@ const ActiveIncidents = () => {
     const activeIncidents = incidents
         .filter(
             (incident) =>
+                incident.priority === "Alta" &&
                 (incident.status === "En Espera" || incident.status === "En Progreso") &&
-                incident.priority === "Alta" && incident.priority !== "Media" &&
-                incident.priority !== "Baja" && incident.status !== "Cancelado" &&
+                incident.status !== "Cancelado" &&
                 incident.status !== "Resuelto"
         )
-        .sort((a, b) => new Date(b.update_date) - new Date(a.update_date));
+        .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
 
     return (
         <Card title="Incidencias Activas" className="active-incidents-card">

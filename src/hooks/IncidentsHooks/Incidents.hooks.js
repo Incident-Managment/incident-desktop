@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday, cancelIncidents } from '../../services/incident.services';
+import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday, cancelIncidents, getIncidentsByDateRange } from '../../services/incident.services';
 
 export const useIncidents = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -106,6 +106,21 @@ export const useIncidents = () => {
     return response;
   };
 
+  const fetchIncidentsByDateRange = async (startDate, endDate) => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      throw new Error('User data not found in cache');
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    if (!parsedUser.user || !parsedUser.user.company || !parsedUser.user.company.id || !parsedUser.user.email) {
+      throw new Error('Invalid user data in cache');
+    }
+    const companyId = parsedUser.user.company.id;
+    const email = parsedUser.user.email;
+    const response = await getIncidentsByDateRange({ companyId, startDate, endDate, email });
+    return response;
+  };
+
   const cancelIncidentMutation = useMutation({
     mutationFn: async ({ incident_id, comments, user_id }) => {
       await cancelIncidents({ incident_id, comments, user_id });
@@ -199,5 +214,6 @@ export const useIncidents = () => {
     handleCancelIncident,
     cancelModalVisible,
     setCancelModalVisible,
+    fetchIncidentsByDateRange, // Add this line to return the new function
   };
 };

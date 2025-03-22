@@ -1,6 +1,6 @@
 import React from 'react';
 import { Menu } from 'antd';
-import { Home, AlertCircle, BarChart2, Users, UserCog, Cog } from 'lucide-react';
+import { Home, AlertCircle, BarChart2, Users, UserCog, Cog, Newspaper } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
@@ -13,27 +13,32 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
     {
       key: '2',
       icon: <AlertCircle size={20} />,
-      label: <Link to="/dashboard/incidents">Incidents</Link>,
+      label: <Link to="/dashboard/incidents">Incidentes</Link>,
     },
     {
       key: '3',
       icon: <BarChart2 size={20} />,
-      label: <Link to="/dashboard/production">Production</Link>,
+      label: <Link to="/dashboard/production">Produccion</Link>,
     },
     {
       key: '7',
       icon: <Cog size={20} />,
-      label: <Link to="/dashboard/company-machines">Machines</Link>,
+      label: <Link to="/dashboard/company-machines">Maquinas</Link>,
     },
     {
       key: '4',
       icon: <UserCog size={20} />,
-      label: <Link to="/dashboard/users-managment">Users Managment</Link>,
+      label: <Link to="/dashboard/users-managment">Usuarios Globales</Link>,
     },
     {
       key: '5',
       icon: <Users size={20} />,
-      label: <Link to="/dashboard/user-profile">Profile</Link>,
+      label: <Link to="/dashboard/user-profile">Perfil</Link>,
+    },
+    {
+      key: '6',
+      icon: <Newspaper size={20} />,
+      label: <Link to="/dashboard/reports">Reportes</Link>,
     }
   ];
 

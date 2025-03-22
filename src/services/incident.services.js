@@ -125,3 +125,13 @@ export const cancelIncidents = async (data) => {
         throw error;
     }
 }
+
+export const getIncidentsByDateRange = async (data) => {
+    try {
+        const incidents = await postData("incidents/getIncidentsByDateRange", data);
+        return incidents;
+    } catch (error) {
+        console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}

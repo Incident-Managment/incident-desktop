@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button, DatePicker } from 'antd';
 import { formatDistanceToNow, isAfter, isBefore } from 'date-fns';
-import { AlertCircle, CheckCircle2, FileText, UserCheck, Ban } from 'lucide-react';
+import { FileText, UserCheck, Ban } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 import AssignTaskPopover from '../../components/Dashboard/Options';
 import CancelIncidentModal from '../../components/Incidents/cancelIncidents';
@@ -106,7 +106,7 @@ export default function Incidents() {
       key: 'description',
     },
     {
-      title: 'Usuario',
+      title: 'Operador',
       dataIndex: 'user',
       key: 'user',
     },
@@ -130,17 +130,6 @@ export default function Incidents() {
       dataIndex: 'creation_date',
       key: 'creation_date',
       render: (date) => <Text>{formatDistanceToNow(new Date(date), { addSuffix: true })}</Text>,
-    },
-    {
-      title: 'Última Actualización',
-      dataIndex: 'update_date',
-      key: 'update_date',
-      render: (date, record) => (
-        <Space>
-          {record.status === 'Resuelto' ? <CheckCircle2 size={16} color="green" /> : <AlertCircle size={16} color="orange" />}
-          <Text>{formatDistanceToNow(new Date(date), { addSuffix: true })}</Text>
-        </Space>
-      ),
     },
     {
       title: 'Acciones',
