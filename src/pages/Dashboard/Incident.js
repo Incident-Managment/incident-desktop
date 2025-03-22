@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button } from 'antd';
-import { formatDistanceToNow, subDays, subMonths, isAfter } from 'date-fns';
-import { AlertCircle, CheckCircle2, FileText, UserCheck, Ban} from 'lucide-react';
+import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button, DatePicker } from 'antd';
+import { formatDistanceToNow, isAfter, isBefore } from 'date-fns';
+import { AlertCircle, CheckCircle2, FileText, UserCheck, Ban } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 import AssignTaskPopover from '../../components/Dashboard/Options';
+import CancelIncidentModal from '../../components/Incidents/cancelIncidents';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const getPriorityColor = (priority) => {
   switch (priority) {
@@ -22,27 +24,49 @@ const getStatusColor = (status) => {
     case 'En Espera': return 'yellow';
     case 'En Progreso': return 'blue';
     case 'Resuelto': return 'green';
+    case 'Cancelado': return 'red';
     default: return 'yellow';
   }
 };
 
 export default function Incidents() {
-  const { incidents, drawerVisible, statusHistory, handleIncidentClick, closeDrawer } = useIncidents();
+  const { incidents, drawerVisible, statusHistory, handleIncidentClick, closeDrawer, handleCancelIncident, cancelModalVisible, setCancelModalVisible } = useIncidents();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [filterPriority, setFilterPriority] = useState('');
-  const [filterDateRange, setFilterDateRange] = useState('');
-  const [, setSelectedIncident] = useState(null);
+  const [filterDateRange, setFilterDateRange] = useState([]);
+  const [selectedIncident, setSelectedIncident] = useState(null);
 
   const handleSearch = (value) => setSearchTerm(value);
   const handleFilterChange = (value) => setFilterStatus(value);
   const handlePriorityChange = (value) => setFilterPriority(value);
-  const handleDateRangeChange = (value) => setFilterDateRange(value);
+  const handleDateRangeChange = (dates) => setFilterDateRange(dates || []);
 
   const openDrawer = (incidentId) => {
     setSelectedIncident(incidentId);
     handleIncidentClick(incidentId);
   };
+
+  const openCancelModal = (incidentId) => {
+    setSelectedIncident(incidentId);
+    setCancelModalVisible(true);
+  };
+
+  const confirmCancel = (incidentId, comments) => {
+    const cachedUser = localStorage.getItem('user');
+    if (!cachedUser) {
+      console.error('User data not found in cache');
+      return;
+    }
+    const parsedUser = JSON.parse(cachedUser);
+    const userId = parsedUser.user.id;
+  
+    if (incidentId) {
+      handleCancelIncident({ incident_id: incidentId, comments, user_id: userId });
+      setCancelModalVisible(false);
+    }
+  };
+
 
   const filteredIncidents = incidents
     .filter((incident) => {
@@ -50,18 +74,9 @@ export default function Incidents() {
       const matchesStatus = filterStatus ? incident.status === filterStatus : true;
       const matchesPriority = filterPriority ? incident.priority === filterPriority : true;
       const matchesDateRange = (() => {
-        if (!filterDateRange) return true;
+        if (!filterDateRange.length) return true;
         const incidentDate = new Date(incident.creation_date);
-        switch (filterDateRange) {
-          case 'today':
-            return isAfter(incidentDate, subDays(new Date(), 1));
-          case 'yesterday':
-            return isAfter(incidentDate, subDays(new Date(), 2)) && !isAfter(incidentDate, subDays(new Date(), 1));
-          case 'lastMonth':
-            return isAfter(incidentDate, subMonths(new Date(), 1));
-          default:
-            return true;
-        }
+        return isAfter(incidentDate, filterDateRange[0]) && isBefore(incidentDate, filterDateRange[1]);
       })();
       return matchesSearchTerm && matchesStatus && matchesPriority && matchesDateRange;
     })
@@ -135,16 +150,18 @@ export default function Incidents() {
           {record.status === 'En Espera' && !record.assigned_task && (
             <Tooltip title="Asignar tarea">
               <AssignTaskPopover incidentId={record.id} companyId={record.company_id}>
-                  <Button type="text" icon={<UserCheck size={18} />} />
+                <Button type="text" icon={<UserCheck size={18} />} />
               </AssignTaskPopover>
             </Tooltip>
           )}
           <Tooltip title="Ver historial">
             <Button type="text" icon={<FileText size={18} />} onClick={() => openDrawer(record.id)} />
           </Tooltip>
-          <Tooltip title="Cancelar Incidencia">
-            <Button type="text" icon={<Ban size={18} />} />
-          </Tooltip>
+          {record.status !== 'Cancelado' && (
+            <Tooltip title="Cancelar Incidencia">
+              <Button type="text" icon={<Ban size={18} />} onClick={() => openCancelModal(record.id)} />
+            </Tooltip>
+          )}
         </Space>
       ),
     },
@@ -167,12 +184,7 @@ export default function Incidents() {
           <Option value="Media">Media</Option>
           <Option value="Baja">Baja</Option>
         </Select>
-        <Select placeholder="Filtrar por fecha" onChange={handleDateRangeChange} style={{ width: 200 }}>
-          <Option value="">Todas</Option>
-          <Option value="today">Hoy</Option>
-          <Option value="yesterday">Ayer</Option>
-          <Option value="lastMonth">Último Mes</Option>
-        </Select>
+        <RangePicker placeholder={['Fecha inicio', 'Fecha fin']} onChange={handleDateRangeChange} style={{ width: 400 }} />
       </div>
       <Table
         columns={columns}
@@ -199,6 +211,12 @@ export default function Incidents() {
           )}
         />
       </Drawer>
+      <CancelIncidentModal
+        visible={cancelModalVisible}
+        onCancel={() => setCancelModalVisible(false)}
+        onConfirm={confirmCancel}
+        selectedIncident={selectedIncident}
+      />
     </div>
   );
 }

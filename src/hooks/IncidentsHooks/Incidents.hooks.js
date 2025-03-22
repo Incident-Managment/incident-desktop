@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday } from '../../services/incident.services';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday, cancelIncidents } from '../../services/incident.services';
 
 export const useIncidents = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [statusHistory, setStatusHistory] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
+  const [cancelModalVisible, setCancelModalVisible] = useState(false);
 
   const fetchIncidents = async () => {
     const cachedUser = localStorage.getItem('user');
@@ -105,6 +106,19 @@ export const useIncidents = () => {
     return response;
   };
 
+  const cancelIncidentMutation = useMutation({
+    mutationFn: async ({ incident_id, comments, user_id }) => {
+      await cancelIncidents({ incident_id, comments, user_id });
+    },
+    onError: (error) => {
+      console.error('Error canceling incident:', error);
+    },
+  });
+  
+  const handleCancelIncident = ({ incident_id, comments, user_id }) => {
+    cancelIncidentMutation.mutate({ incident_id, comments, user_id });
+  };
+
   const { data: incidents = [], error, isLoading } = useQuery({
     queryKey: ['incidents'],
     queryFn: fetchIncidents,
@@ -182,5 +196,8 @@ export const useIncidents = () => {
     commonProblemsPercentageToday,
     commonProblemsError,
     commonProblemsLoading,
+    handleCancelIncident,
+    cancelModalVisible,
+    setCancelModalVisible,
   };
 };

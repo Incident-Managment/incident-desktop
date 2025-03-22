@@ -1,4 +1,4 @@
-import { fetchData } from "../config/api";
+import { fetchData, postData } from "../config/api";
 
 export const getIncidentsByCompany = async (companyId) => {
     try {
@@ -112,6 +112,16 @@ export const getCommonProblemsPercentageToday = async (companyId) => {
         return countIncidentsByCompany;
     }catch(error){
         console.error("Error fetching incidents:", error.message);
+        throw error;
+    }
+}
+
+export const cancelIncidents = async (data) => {
+    try {
+        const incidents = await postData("incidents/cancelIncident", data);
+        return incidents;
+    } catch (error) {
+        console.error("Error canceling incident:", error.message);
         throw error;
     }
 }
