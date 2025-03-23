@@ -59,3 +59,13 @@ export const getechniqueUsersByRoleAndCompany= async (id) => {
         throw error;
     }
 };
+
+export const getUsersByCompany = async (companyId) => {
+    try {
+        const users = await fetchData(`users/getUsersByCompany?companyId=${companyId}`);
+        return users;
+    } catch (error) {
+        console.error("Error fetching users:", error.message);
+        throw error;
+    }
+}
