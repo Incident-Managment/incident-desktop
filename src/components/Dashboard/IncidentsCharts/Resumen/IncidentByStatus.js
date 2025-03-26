@@ -21,7 +21,7 @@ const IncidencesByStatus = ({ viewMode, setViewMode }) => {
       const incidentsData = incidentsByStatus.incidentsData;
       const years = Object.keys(incidentsData);
       if (!selectedYear && years.length > 0) {
-        setSelectedYear(years[0]);
+        setSelectedYear(years.includes('2025') ? '2025' : years[0]);
       }
     }
   }, [incidentsByStatus, selectedYear]);
