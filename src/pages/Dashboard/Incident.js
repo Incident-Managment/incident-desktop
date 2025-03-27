@@ -151,7 +151,7 @@ export default function Incidents() {
           <Tooltip title="Ver historial">
             <Button type="text" icon={<FileText size={18} />} onClick={() => openDrawer(record.id)} />
           </Tooltip>
-          {record.status !== 'Cancelado' && (
+          {record.status === 'En Espera' && (
             <Tooltip title="Cancelar Incidencia">
               <Button type="text" icon={<Ban size={18} />} onClick={() => openCancelModal(record.id)} />
             </Tooltip>
