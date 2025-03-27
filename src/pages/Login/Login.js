@@ -6,7 +6,7 @@ import '../../assets/styles/Login/Login.css';
 import useLogin from '../../hooks/Login.hooks';
 import { UserContext } from '../../providers/users/UserContext';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -17,48 +17,53 @@ const Login = () => {
   const onFinish = async (values) => {
     const success = await handleLogin(values.email, values.password);
     if (success) {
-      message.success('Login successful');
+      message.success('Inicio de sesión exitoso');
       navigate('/dashboard'); // Redirige al dashboard después del login
     } else {
-      message.error(error || 'Login failed');
+      message.error(error || 'Error al iniciar sesión');
     }
   };
 
   return (
     <div className="login-page">
-      <div className="background-image"></div>
+      <div className="background-video">
+        <video autoPlay muted loop>
+          <source src="/backgroundLogin.mp4" type="video/mp4" />
+          Tu navegador no soporta el elemento de video.
+        </video>
+      </div>
       <div className="background-overlay"></div>
       <div className="login-form-container">
         <div className="login-content">
           <img src="/techsolutions.png" alt="logo" className="login-logo" />
           <div>
             <Title level={2} className="login-title">
-              !Hello, Welcome back¡
+              ¡Hola, Bienvenido !
             </Title>
             <Text className="login-text">
-              Enter your email below to login to your account
+              Ingresa tu correo electrónico abajo para iniciar sesión en tu cuenta
             </Text>
           </div>
 
           <Form form={form} className="login-form" onFinish={onFinish}>
             <Form.Item
               name="email"
-              rules={[{ required: true, message: 'Please input your email!' }]}
+              rules={[{ required: true, message: '¡Por favor ingresa tu correo electrónico!' }]}
             >
               <Input
                 prefix={<MailOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                placeholder="Email"
+                placeholder="Correo electrónico"
               />
             </Form.Item>
 
             <Form.Item
               name="password"
-              rules={[{ required: true, message: 'Please input your Password!' }]}
+              rules={[{ required: true, message: '¡Por favor ingresa tu contraseña!' }]}
             >
               <Input
                 prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                 type="password"
-                placeholder="Password"
+                placeholder="Contraseña"
               />
             </Form.Item>
 
@@ -70,17 +75,10 @@ const Login = () => {
                 icon={<ArrowRightOutlined />}
                 loading={loading}
               >
-                Login
+                Iniciar sesión
               </Button>
             </Form.Item>
           </Form>
-
-          <div className="login-footer">
-            <Text className="login-footer-text">Don't have an account? </Text>
-            <Link href="/register" className="login-footer-link">
-              Sign up
-            </Link>
-          </div>
         </div>
       </div>
     </div>

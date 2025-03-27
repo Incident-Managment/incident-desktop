@@ -7,24 +7,12 @@ import {
   Col,
   Card,
   Tabs,
-  Select,
 } from "antd"
 import {
   BarChart2,
   PieChartIcon,
   LineChartIcon,
 } from "lucide-react"
-import {
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  Bar,
-  ResponsiveContainer,
-  ComposedChart,
-} from "recharts"
 import dayjs from "dayjs"
 import "dayjs/locale/es"
 import '../../assets/styles/Dashboard/Dashboard.css';
@@ -35,59 +23,14 @@ import IncidentComparison from "../../components/Dashboard/IncidentsCharts/Resum
 import MonthlyEvolutionChart from "../../components/Dashboard/IncidentsCharts/Tendencies/MonthlyEvolution";
 import CommonIssuesAnalysis from "../../components/Dashboard/IncidentsCharts/CommonProblems/AnalitycsProblemsGlobal";
 import CommonIssuesCard from "../../components/Dashboard/IncidentsCharts/Resumen/CommonIssuesCard"
-
+import YearlyComparisonChart from "../../components/Dashboard/IncidentsCharts/Tendencies/YearlyComparisonChart"
 dayjs.locale("es")
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
-const { Option } = Select
-
-const yearlyComparison = [
-  { month: "Ene", actual: 138, anterior: 120 },
-  { month: "Feb", actual: 140, anterior: 125 },
-  { month: "Mar", actual: 183, anterior: 150 },
-  { month: "Abr", actual: 176, anterior: 160 },
-  { month: "May", actual: 125, anterior: 140 },
-  { month: "Jun", actual: 123, anterior: 130 },
-  { month: "Jul", actual: 0, anterior: 145 },
-  { month: "Ago", actual: 0, anterior: 155 },
-  { month: "Sep", actual: 0, anterior: 165 },
-  { month: "Oct", actual: 0, anterior: 170 },
-  { month: "Nov", actual: 0, anterior: 160 },
-  { month: "Dic", actual: 0, anterior: 150 },
-]
 
 const Dashboard = () => {
   const [viewMode, setViewMode] = useState("weekly")
-
-  const renderYearlyComparison = () => {
-    return (
-      <div className="yearly-comparison">
-        <div className="chart-header">
-          <Title level={5}>Comparativa Global de Incidencias</Title>
-          <div className="chart-actions">
-            <Select defaultValue="2023" style={{ width: 100 }} dropdownMatchSelectWidth={false}>
-              <Option value="2023">2023</Option>
-              <Option value="2022">2022</Option>
-              <Option value="2021">2021</Option>
-            </Select>
-          </div>
-        </div>
-
-        <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={yearlyComparison}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="actual" name="Año Actual" fill="#1890ff" />
-            <Line type="monotone" dataKey="anterior" name="Año Anterior" stroke="#ff7a45" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </div>
-    )
-  }
 
   return (
     <div className="dashboard-container">
@@ -169,8 +112,8 @@ const Dashboard = () => {
             >
               <Row gutter={[16, 16]}>
                 <Col xs={24}>
-                  <Card title="Comparativa Global" className="chart-card">
-                    {renderYearlyComparison()}
+                  <Card title="Comparativa Global de Incidencias" className="chart-card">
+                    <YearlyComparisonChart />
                   </Card>
                 </Col>
               </Row>

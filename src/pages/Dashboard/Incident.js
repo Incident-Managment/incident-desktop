@@ -36,11 +36,13 @@ export default function Incidents() {
   const [filterPriority, setFilterPriority] = useState('');
   const [filterDateRange, setFilterDateRange] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
 
   const handleSearch = (value) => setSearchTerm(value);
   const handleFilterChange = (value) => setFilterStatus(value);
   const handlePriorityChange = (value) => setFilterPriority(value);
   const handleDateRangeChange = (dates) => setFilterDateRange(dates || []);
+  const handleYearChange = (year) => setSelectedYear(year);
 
   const openDrawer = (incidentId) => {
     setSelectedIncident(incidentId);
@@ -67,9 +69,12 @@ export default function Incidents() {
     }
   };
 
+  const availableYears = [...new Set(incidents.map((incident) => new Date(incident.creation_date).getFullYear().toString()))].sort((a, b) => b - a);
 
   const filteredIncidents = incidents
     .filter((incident) => {
+      const incidentYear = new Date(incident.creation_date).getFullYear().toString();
+      const matchesYear = incidentYear === selectedYear;
       const matchesSearchTerm = incident.title.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = filterStatus ? incident.status === filterStatus : true;
       const matchesPriority = filterPriority ? incident.priority === filterPriority : true;
@@ -78,7 +83,7 @@ export default function Incidents() {
         const incidentDate = new Date(incident.creation_date);
         return isAfter(incidentDate, filterDateRange[0]) && isBefore(incidentDate, filterDateRange[1]);
       })();
-      return matchesSearchTerm && matchesStatus && matchesPriority && matchesDateRange;
+      return matchesYear && matchesSearchTerm && matchesStatus && matchesPriority && matchesDateRange;
     })
     .sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
 
@@ -161,6 +166,11 @@ export default function Incidents() {
       <Title level={1} style={{ marginBottom: '2rem' }}>Incidencias</Title>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
         <Search placeholder="Buscar incidencias" onSearch={handleSearch} style={{ width: 200 }} />
+        <Select placeholder="Seleccionar año" onChange={handleYearChange} value={selectedYear} style={{ width: 200 }}>
+          {availableYears.map((year) => (
+            <Option key={year} value={year}>{year}</Option>
+          ))}
+        </Select>
         <Select placeholder="Filtrar por estado" onChange={handleFilterChange} style={{ width: 200 }}>
           <Option value="">Todos</Option>
           <Option value="En Espera">En Espera</Option>
