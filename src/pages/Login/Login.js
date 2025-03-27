@@ -30,9 +30,10 @@ const Login = () => {
       <div className="background-overlay"></div>
       <div className="login-form-container">
         <div className="login-content">
+          <img src="/techsolutions.png" alt="logo" className="login-logo" />
           <div>
             <Title level={2} className="login-title">
-              Login to your account
+              !Hello, Welcome back¡
             </Title>
             <Text className="login-text">
               Enter your email below to login to your account
