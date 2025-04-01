@@ -95,7 +95,13 @@ const MainLayout = () => {
       >
         <DashboardMenu selectedMenu={selectedMenu} setSelectedMenu={setSelectedMenu} />
       </Drawer>
-      <Layout css={css`margin-left: 240px;`}>
+
+      <Layout
+        css={css`
+          margin-left: ${isSmallScreen ? '0' : '240px'};
+          transition: margin-left 0.3s ease;
+        `}
+      >
         <Header
           css={css`
             background: #fff;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Typography, Table, Button, Space, Input } from 'antd';
 import { Plus, MoreHorizontal } from 'lucide-react';
 import { useGetUsersByCompany } from '../../hooks/UsersHooks/users.hooks';
-import CreateUserModal from '../../components/Users/createUsers';
+import CreateUserModal from '../../components/Users/createCompanyUsers';
 import UpdateUserModal from '../../components/Users/updateUsers';
 import { formatDate } from '../../utils/date-format';
 const { Title } = Typography;
@@ -133,13 +133,36 @@ const UsersByCompany = () => {
 
     return (
         <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Title level={2}>Usuarios</Title>
-                <Button type="primary" icon={<Plus size={16} />} onClick={() => setIsCreateModalOpen(true)}>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: window.innerWidth < 768 ? 'column' : 'row',
+                    justifyContent: 'space-between',
+                    alignItems: window.innerWidth < 768 ? 'flex-start' : 'center',
+                    gap: '1rem',
+                }}
+            >
+                <Title level={1} style={{ marginBottom: window.innerWidth < 768 ? '1rem' : '0' }}>
+                    Usuarios
+                </Title>
+                <Button
+                    type="primary"
+                    icon={<Plus size={16} />}
+                    onClick={() => setIsCreateModalOpen(true)}
+                    style={{ width: window.innerWidth < 768 ? '100%' : 'auto' }}
+                >
                     Nuevo Usuario
                 </Button>
             </div>
-            <Table dataSource={users} columns={columns} rowKey="id" pagination={{ pageSize: 10 }} />
+
+            <Table
+                dataSource={users}
+                columns={columns}
+                rowKey="id"
+                pagination={{ pageSize: 10 }}
+                scroll={{ x: 800 }}
+            />
+
             <CreateUserModal
                 isOpen={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}

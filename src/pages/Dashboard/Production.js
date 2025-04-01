@@ -42,7 +42,6 @@ export default function ProductionTimelineEnhanced() {
       const selected = phases.find((phase) => phase.id === phaseId);
       setSelectedPhase(selected);
       setNewOrder(selected.phase_order);
-      setNewActive(selected.is_active);
       setNewName(selected.name);
     }
   };
@@ -55,7 +54,6 @@ export default function ProductionTimelineEnhanced() {
     handleUpdatePhase({
       ...selectedPhase,
       name: newName,
-      is_active: newActive,
     });
   };
 
@@ -73,18 +71,6 @@ export default function ProductionTimelineEnhanced() {
             {text}
           </span>
         </div>
-      ),
-    },
-    {
-      title: "Estado",
-      dataIndex: "is_active",
-      key: "is_active",
-      render: (isActive, record) => (
-        <Switch
-          checked={record.id === expandedPhase ? newActive : isActive}
-          onChange={handleToggleActive}
-          disabled={record.id !== expandedPhase}
-        />
       ),
     },
     {
@@ -118,9 +104,23 @@ export default function ProductionTimelineEnhanced() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Title>Línea Temporal de Producción</Title>
-        <Button type="primary" onClick={() => setIsModalVisible(true)} style={{ marginTop: 15 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: window.innerWidth < 768 ? "column" : "row", // Cambia la dirección en pantallas pequeñas
+          justifyContent: "space-between",
+          alignItems: window.innerWidth < 768 ? "flex-start" : "center", // Alinea los elementos en pantallas pequeñas
+          gap: "1rem", // Espaciado entre elementos
+        }}
+      >
+        <Title style={{ marginBottom: window.innerWidth < 768 ? "1rem" : "0" }}>
+          Línea Temporal de Producción
+        </Title>
+        <Button
+          type="primary"
+          onClick={() => setIsModalVisible(true)}
+          style={{ marginTop: window.innerWidth < 768 ? 0 : 15 }}
+        >
           Añadir Fase de Producción
         </Button>
       </div>

@@ -78,19 +78,35 @@ const CompanyMachines = () => {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Title>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: window.innerWidth < 768 ? "column" : "row",
+          justifyContent: "space-between",
+          alignItems: window.innerWidth < 768 ? "flex-start" : "center",
+          gap: "1rem",
+        }}
+      >
+        <Title style={{ marginBottom: window.innerWidth < 768 ? "1rem" : "0" }}>
           Maquinas
         </Title>
-        <div style={{ marginTop: "20px" }}>
+        <div style={{ marginTop: window.innerWidth < 768 ? "0" : "20px" }}>
           <Button
             type="primary"
             onClick={() => setIsCreateMachineModalVisible(true)}
-            style={{ marginRight: "10px", backgroundColor: "#1890ff" }}
+            style={{
+              marginRight: window.innerWidth < 768 ? "0" : "10px",
+              marginBottom: window.innerWidth < 768 ? "10px" : "0",
+              backgroundColor: "#1890ff",
+            }}
           >
             Crear Maquina
           </Button>
-          <Button type="primary" onClick={() => setIsCreateModalVisible(true)} style={{ backgroundColor: "#1890ff" }}>
+          <Button
+            type="primary"
+            onClick={() => setIsCreateModalVisible(true)}
+            style={{ backgroundColor: "#1890ff" }}
+          >
             Crear Tipo de Maquina
           </Button>
         </div>

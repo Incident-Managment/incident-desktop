@@ -134,7 +134,11 @@ export default function Incidents() {
       title: 'Creado',
       dataIndex: 'creation_date',
       key: 'creation_date',
-      render: (date) => <Text>{formatDistanceToNow(new Date(date), { addSuffix: true })}</Text>,
+      render: (date) => {
+        const adjustedDate = new Date(date);
+        adjustedDate.setHours(adjustedDate.getHours() + 7);
+        return <Text>{formatDistanceToNow(adjustedDate, { addSuffix: true })}</Text>;
+      },
     },
     {
       title: 'Acciones',
@@ -164,32 +168,41 @@ export default function Incidents() {
   return (
     <div style={{ minHeight: '100vh' }}>
       <Title level={1} style={{ marginBottom: '2rem' }}>Incidencias</Title>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <Search placeholder="Buscar incidencias" onSearch={handleSearch} style={{ width: 200 }} />
-        <Select placeholder="Seleccionar año" onChange={handleYearChange} value={selectedYear} style={{ width: 200 }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          justifyContent: 'space-between',
+          marginBottom: '1rem',
+        }}
+      >
+        <Search placeholder="Buscar incidencias" onSearch={handleSearch} style={{ width: '200px' }} />
+        <Select placeholder="Seleccionar año" onChange={handleYearChange} value={selectedYear} style={{ width: '200px' }}>
           {availableYears.map((year) => (
             <Option key={year} value={year}>{year}</Option>
           ))}
         </Select>
-        <Select placeholder="Filtrar por estado" onChange={handleFilterChange} style={{ width: 200 }}>
+        <Select placeholder="Filtrar por estado" onChange={handleFilterChange} style={{ width: '200px' }}>
           <Option value="">Todos</Option>
           <Option value="En Espera">En Espera</Option>
           <Option value="En Progreso">En Progreso</Option>
           <Option value="Resuelto">Resuelto</Option>
         </Select>
-        <Select placeholder="Filtrar por prioridad" onChange={handlePriorityChange} style={{ width: 200 }}>
+        <Select placeholder="Filtrar por prioridad" onChange={handlePriorityChange} style={{ width: '200px' }}>
           <Option value="">Todas</Option>
           <Option value="Alta">Alta</Option>
           <Option value="Media">Media</Option>
           <Option value="Baja">Baja</Option>
         </Select>
-        <RangePicker placeholder={['Fecha inicio', 'Fecha fin']} onChange={handleDateRangeChange} style={{ width: 400 }} />
+        <RangePicker placeholder={['Fecha inicio', 'Fecha fin']} onChange={handleDateRangeChange} style={{ width: '400px' }} />
       </div>
       <Table
         columns={columns}
         dataSource={filteredIncidents}
         rowKey="id"
         pagination={{ pageSize: 5 }}
+        scroll={{ x: 1200 }}
       />
       <Drawer
         title="Historial de Estado de la Incidencia"

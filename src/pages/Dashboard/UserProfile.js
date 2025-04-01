@@ -141,19 +141,6 @@ const UserProfile = () => {
                             Edit Profile
                         </Button>
                     </Tooltip>
-                    <Tooltip title="Change Password">
-                        <Button
-                            type="link"
-                            style={{
-                                fontSize: 16,
-                                color: '#f5222d',
-                                fontWeight: 'bold',
-                                padding: 0,
-                            }}
-                        >
-                            Change Password
-                        </Button>
-                    </Tooltip>
                 </div>
             </Card>
 

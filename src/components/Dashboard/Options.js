@@ -49,7 +49,7 @@ const AssignTaskPopover = ({ incidentId }) => {
                 <Select loading={isLoadingTechnicians} placeholder="Seleccione un técnico">
                     {technicians?.map((tech) => (
                         <Option key={tech.id} value={tech.id}>
-                            {tech.name} ({tech.task_count} tareas)
+                            {tech.name}
                         </Option>
                     ))}
                 </Select>
