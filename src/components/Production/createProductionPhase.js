@@ -1,18 +1,16 @@
 import React from "react";
-import { Modal, Input, Switch } from "antd";
+import { Modal, Input } from "antd";
 import { useCreateProductionPhase } from "../../hooks/ProductionHooks/production.hooks";
 
 const CreateProductionPhaseModal = ({ companyId, isVisible, onClose }) => {
   const {
     newPhaseName,
     setNewPhaseName,
-    newPhaseActive,
-    setNewPhaseActive,
     handleCreatePhase,
   } = useCreateProductionPhase(companyId);
 
   const handleOk = () => {
-    handleCreatePhase();
+    handleCreatePhase({ is_active: true });
     onClose();
   };
 
@@ -31,13 +29,6 @@ const CreateProductionPhaseModal = ({ companyId, isVisible, onClose }) => {
           value={newPhaseName}
           onChange={(e) => setNewPhaseName(e.target.value)}
         />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <Switch
-          checked={newPhaseActive}
-          onChange={(checked) => setNewPhaseActive(checked)}
-        />
-        <span style={{ marginLeft: 8 }}>Activo</span>
       </div>
     </Modal>
   );
