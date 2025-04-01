@@ -66,7 +66,7 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
       case 3:
         return allMenuItems.filter(item => ['1', '2', '3', '7', '5'].includes(item.key));
       case 4:
-        return [];
+        return allMenuItems.filter(item => item.key === '4');
       default:
         return [];
     }
