@@ -17,13 +17,8 @@ const CommonIssuesCard = () => {
     <Card
       title="Problemas Más Comunes del Dia de Hoy"
       className="chart-card"
-      extra={
-        <Button type="link" onClick={() => { }}>
-          Ver detalles
-        </Button>
-      }
     >
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={346}>
         <PieChart>
           <Pie
             data={commonIssuesData}

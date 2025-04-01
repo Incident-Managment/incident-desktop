@@ -37,13 +37,16 @@ const ActiveIncidents = () => {
     const activeIncidents = incidents
         .filter(
             (incident) =>
-                incident.priority === "Alta" &&
+                (incident.priority === "Alta" || incident.priority === "Media" || incident.priority === "Baja") &&
                 (incident.status === "En Espera" || incident.status === "En Progreso") &&
                 incident.status !== "Cancelado" &&
                 incident.status !== "Resuelto"
         )
-        .sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-
+        .sort((a, b) => 
+            new Date(b.creation_date).setHours(new Date(b.creation_date).getHours() + 7) - 
+            new Date(a.creation_date).setHours(new Date(a.creation_date).getHours() + 7)
+        );
+    
     return (
         <Card title="Incidencias Activas" className="active-incidents-card">
         <List
@@ -51,44 +54,49 @@ const ActiveIncidents = () => {
             itemLayout="horizontal"
             dataSource={activeIncidents}
             style={{ maxHeight: '345px', overflowY: 'auto' }}
-            renderItem={(item) => (
-                <List.Item
-                    actions={[
-                    ]}
-                >
-                    <List.Item.Meta
-                        avatar={
-                            <Avatar
-                                icon={getStatusIcon(item.status)}
-                                style={{
-                                    backgroundColor:
-                                        item.status === "Resuelto" ? "#f6ffed" : item.status === "En Progreso" ? "#e6f7ff" : "#fffbe6",
-                                    color: getStatusColor(item.status),
-                                }}
-                            />
-                        }
-                        title={
-                            <div>
-                                <Text strong>{item.title}</Text>
-                                <Tag color={getStatusColor(item.status)} style={{ marginLeft: "8px" }}>
-                                    {item.status}
-                                </Tag>
-                                <Tag color={item.priority === "Alta" ? "red" : item.priority === "Media" ? "orange" : "green"}>
-                                    {item.priority}
-                                </Tag>
-                            </div>
-                        }
-                        description={
-                            <div>
-                                <Text type="secondary">{item.description}</Text>
-                                <div className="incident-meta">
-                                    <Tag color="default">{item.category}</Tag>
+            renderItem={(item) => {
+                const adjustedDate = new Date(item.creation_date);
+                adjustedDate.setHours(adjustedDate.getHours() + 7);
+        
+                return (
+                    <List.Item actions={[]}>
+                        <List.Item.Meta
+                            avatar={
+                                <Avatar
+                                    icon={getStatusIcon(item.status)}
+                                    style={{
+                                        backgroundColor:
+                                            item.status === "Resuelto" ? "#f6ffed" : item.status === "En Progreso" ? "#e6f7ff" : "#fffbe6",
+                                        color: getStatusColor(item.status),
+                                    }}
+                                />
+                            }
+                            title={
+                                <div>
+                                    <Text strong>{item.title}</Text>
+                                    <Tag color={getStatusColor(item.status)} style={{ marginLeft: "8px" }}>
+                                        {item.status}
+                                    </Tag>
+                                    <Tag color={item.priority === "Alta" ? "red" : item.priority === "Media" ? "orange" : "green"}>
+                                        {item.priority}
+                                    </Tag>
                                 </div>
-                            </div>
-                        }
-                    />
-                </List.Item>
-            )}
+                            }
+                            description={
+                                <div>
+                                    <Text type="secondary">{item.description}</Text>
+                                    <div className="incident-meta">
+                                        <Tag color="default">{item.category}</Tag>
+                                        <Text type="secondary" style={{ display: "block" }}>
+                                            Fecha: {adjustedDate.toLocaleString()}
+                                        </Text>
+                                    </div>
+                                </div>
+                            }
+                        />
+                    </List.Item>
+                );
+            }}
         />
     </Card>
     );
