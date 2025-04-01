@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Typography, Button, Input, Switch } from "antd";
+import { Table, Typography, Button, Input } from "antd";
 import { Circle, ChevronDown, ChevronUp } from "lucide-react";
 import styled from "styled-components";
 import { useProductionPhases } from "../../hooks/ProductionHooks/production.hooks";
@@ -23,11 +23,9 @@ export default function ProductionTimelineEnhanced() {
     phases,
     selectedPhase,
     newName,
-    newActive,
     setSelectedPhase,
     setNewName,
     setNewOrder,
-    setNewActive,
     handleUpdatePhase,
   } = useProductionPhases(companyId);
 
@@ -44,10 +42,6 @@ export default function ProductionTimelineEnhanced() {
       setNewOrder(selected.phase_order);
       setNewName(selected.name);
     }
-  };
-
-  const handleToggleActive = (checked) => {
-    setNewActive(checked);
   };
 
   const handleSaveChanges = () => {
@@ -107,10 +101,10 @@ export default function ProductionTimelineEnhanced() {
       <div
         style={{
           display: "flex",
-          flexDirection: window.innerWidth < 768 ? "column" : "row", // Cambia la dirección en pantallas pequeñas
+          flexDirection: window.innerWidth < 768 ? "column" : "row",
           justifyContent: "space-between",
-          alignItems: window.innerWidth < 768 ? "flex-start" : "center", // Alinea los elementos en pantallas pequeñas
-          gap: "1rem", // Espaciado entre elementos
+          alignItems: window.innerWidth < 768 ? "flex-start" : "center",
+          gap: "1rem",
         }}
       >
         <Title style={{ marginBottom: window.innerWidth < 768 ? "1rem" : "0" }}>
