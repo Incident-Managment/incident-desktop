@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Tag, Typography, Space, Input, Select, Drawer, List, Tooltip, Button, DatePicker } from 'antd';
 import { formatDistanceToNow, isAfter, isBefore } from 'date-fns';
-import { FileText, UserCheck, Ban } from 'lucide-react';
+import { FileText, UserCheck, Ban, MessageCircle } from 'lucide-react';
 import { useIncidents } from '../../hooks/IncidentsHooks/Incidents.hooks';
 import AssignTaskPopover from '../../components/Dashboard/Options';
 import CancelIncidentModal from '../../components/Incidents/cancelIncidents';
@@ -30,13 +30,27 @@ const getStatusColor = (status) => {
 };
 
 export default function Incidents() {
-  const { incidents, drawerVisible, statusHistory, handleIncidentClick, closeDrawer, handleCancelIncident, cancelModalVisible, setCancelModalVisible } = useIncidents();
+  const {
+    incidents,
+    drawerVisible,
+    statusHistory,
+    handleIncidentClick,
+    closeDrawer,
+    handleCancelIncident,
+    cancelModalVisible,
+    setCancelModalVisible,
+    techniqueComments,
+    handleTechniqueCommentsClick,
+    closeTechniqueDrawer,
+  } = useIncidents();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [filterPriority, setFilterPriority] = useState('');
   const [filterDateRange, setFilterDateRange] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+  const [commentsDrawerVisible, setCommentsDrawerVisible] = useState(false);
 
   const handleSearch = (value) => setSearchTerm(value);
   const handleFilterChange = (value) => setFilterStatus(value);
@@ -62,11 +76,22 @@ export default function Incidents() {
     }
     const parsedUser = JSON.parse(cachedUser);
     const userId = parsedUser.user.id;
-  
+
     if (incidentId) {
       handleCancelIncident({ incident_id: incidentId, comments, user_id: userId });
       setCancelModalVisible(false);
     }
+  };
+
+  const openCommentsDrawer = (incidentId) => {
+    setSelectedIncident(incidentId);
+    handleTechniqueCommentsClick(incidentId);
+    setCommentsDrawerVisible(true);
+  };
+
+  const closeCommentsDrawer = () => {
+    closeTechniqueDrawer();
+    setCommentsDrawerVisible(false);
   };
 
   const availableYears = [...new Set(incidents.map((incident) => new Date(incident.creation_date).getFullYear().toString()))].sort((a, b) => b - a);
@@ -87,7 +112,7 @@ export default function Incidents() {
     })
     .sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
 
-  const columns = [
+    const columns = [
     {
       title: 'Prioridad',
       dataIndex: 'priority',
@@ -141,6 +166,12 @@ export default function Incidents() {
       },
     },
     {
+      title: 'Tecnico Asignado',
+      dataIndex: 'assigned_task',
+      key: 'assigned_task',
+      render: (assignedTask) => <Text>{assignedTask ? assignedTask.assigned_user_name : 'Sin asignar'}</Text>,
+    },
+    {
       title: 'Acciones',
       key: 'action',
       render: (_, record) => (
@@ -160,6 +191,12 @@ export default function Incidents() {
               <Button type="text" icon={<Ban size={18} />} onClick={() => openCancelModal(record.id)} />
             </Tooltip>
           )}
+          {record.commentstechnique !== null && 
+            (
+              <Tooltip title="Ver comentarios del técnico">
+                <Button type="text" icon={<MessageCircle size={18} />} onClick={() => openCommentsDrawer(record.id)} />
+              </Tooltip>
+            )}
         </Space>
       ),
     },
@@ -222,6 +259,22 @@ export default function Incidents() {
             </List.Item>
           )}
         />
+      </Drawer>
+      <Drawer
+        title="Comentarios del Técnico"
+        placement="right"
+        onClose={closeCommentsDrawer}
+        open={commentsDrawerVisible}
+        width={400}
+      >
+          <List
+            dataSource={techniqueComments}
+            renderItem={(item) => (
+              <List.Item>
+                <Text>{item.key}</Text>
+              </List.Item>
+            )}
+          />
       </Drawer>
       <CancelIncidentModal
         visible={cancelModalVisible}

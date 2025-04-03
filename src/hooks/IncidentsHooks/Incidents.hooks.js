@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday, cancelIncidents, getIncidentsByDateRange } from '../../services/incident.services';
+import { getIncidentsByCompany, getIncidentStatusHistory, getRecentIncidentsByCompany, getIncidentByStatusWeekAndMonthly, getMonthlyEvolution, getMostCommonProblemsByCategory, getCommonProblemsPercentageToday, cancelIncidents, getIncidentsByDateRange, getTechniqueCommentsByIncident } from '../../services/incident.services';
 
 export const useIncidents = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [statusHistory, setStatusHistory] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
+  const [techniqueComments, setTechniqueComments] = useState([]);
+  const [techniqueDrawerVisible, setTechniqueDrawerVisible] = useState(false);
 
   const fetchIncidents = async () => {
     const cachedUser = localStorage.getItem('user');
@@ -33,6 +35,7 @@ export const useIncidents = () => {
       update_date: incident.update_date,
       assigned_task: incident.assigned_task,
       company: incident.company.name,
+      commentstechnique: incident.commentstechnique,
     }));
   };
 
@@ -129,7 +132,7 @@ export const useIncidents = () => {
       console.error('Error canceling incident:', error);
     },
   });
-  
+
   const handleCancelIncident = ({ incident_id, comments, user_id }) => {
     cancelIncidentMutation.mutate({ incident_id, comments, user_id });
   };
@@ -181,9 +184,26 @@ export const useIncidents = () => {
     }
   };
 
+  const handleTechniqueCommentsClick = async (incidentId) => {
+    try {
+      const comments = await getTechniqueCommentsByIncident(incidentId);
+      setTechniqueComments(comments);
+      setSelectedIncident(incidentId);
+      setTechniqueDrawerVisible(true);
+    } catch (error) {
+      console.error('Error fetching technique comments:', error);
+    }
+  };
+
   const closeDrawer = () => {
     setDrawerVisible(false);
     setStatusHistory([]);
+    setSelectedIncident(null);
+  };
+
+  const closeTechniqueDrawer = () => {
+    setTechniqueDrawerVisible(false);
+    setTechniqueComments([]);
     setSelectedIncident(null);
   };
 
@@ -214,6 +234,10 @@ export const useIncidents = () => {
     handleCancelIncident,
     cancelModalVisible,
     setCancelModalVisible,
-    fetchIncidentsByDateRange, // Add this line to return the new function
+    fetchIncidentsByDateRange,
+    techniqueComments,
+    techniqueDrawerVisible,
+    handleTechniqueCommentsClick,
+    closeTechniqueDrawer,
   };
 };

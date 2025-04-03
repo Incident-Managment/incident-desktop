@@ -70,11 +70,11 @@ const AssignTaskPopover = ({ incidentId }) => {
             open={visible}
             onOpenChange={setVisible}
         >
-            <Tooltip title="Asignar tarea">
-                <span onClick={(e) => e.stopPropagation()} style={{ cursor: 'pointer' }}>
-                    <UserCheck size={18} />
-                </span>
-            </Tooltip>
+        <Tooltip title="Asignar tarea">
+            <span onClick={(e) => e.stopPropagation()} style={{ cursor: 'pointer', display: 'inline-block', marginTop: '5px' }}>
+                <UserCheck size={18} />
+            </span>
+        </Tooltip>
         </Popover>
     );
 };

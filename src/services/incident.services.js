@@ -135,3 +135,13 @@ export const getIncidentsByDateRange = async (data) => {
         throw error;
     }
 }
+
+export const getTechniqueCommentsByIncident = async (incidentId) => {
+    try {
+        const comments = await fetchData(`incidents/getTechniqueCommentsByIncident?incidentId=${incidentId}`);
+        return comments;
+    } catch (error) {
+        console.error("Error fetching incident comments:", error.message);
+        throw error;
+    }
+}
