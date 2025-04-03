@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
   ResponsiveContainer,
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
@@ -63,17 +63,7 @@ const YearlyComparisonChart = () => {
     >
       {data.length > 0 ? (
         <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={data}>
-            <defs>
-              <linearGradient id="colorActual" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#0052cc" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#0052cc" stopOpacity={0} />
-              </linearGradient>
-              <linearGradient id="colorAnterior" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#2ed8b6" stopOpacity={1} />
-                <stop offset="95%" stopColor="#2ed8b6" stopOpacity={0} />
-              </linearGradient>
-            </defs>
+          <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
             <XAxis dataKey="month" stroke="#666" />
             <YAxis stroke="#666" />
@@ -86,23 +76,19 @@ const YearlyComparisonChart = () => {
               }}
               itemStyle={{ color: "#333" }}
             />
-            <Area
-              type="monotone"
+            <Bar
               dataKey="actual"
               name="Año Actual"
-              stroke="#0052cc"
-              fillOpacity={1}
-              fill="url(#colorActual)"
+              fill="#3566ff"
+              barSize={40}
             />
-            <Area
-              type="monotone"
+            <Bar
               dataKey="anterior"
               name="Año Anterior"
-              stroke="#2ed8b6"
-              fillOpacity={1}
-              fill="url(#colorAnterior)"
+              fill="#8a35ff"
+              barSize={40}
             />
-          </AreaChart>
+          </BarChart>
         </ResponsiveContainer>
       ) : (
         <p style={{ color: "#666", textAlign: "center", marginTop: "20px" }}>
