@@ -54,6 +54,11 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
       icon: <Users size={20} />,
       label: <Link to="/dashboard/user-profile">Perfil</Link>,
     },
+    {
+      key: '9',
+      icon: <Users size={20} />,
+      label: <Link to="/dashboard/companies">Empresas</Link>,
+    },
   ];
 
   const filterMenuItems = (role_id) => {
@@ -61,13 +66,14 @@ const DashboardMenu = ({ selectedMenu, setSelectedMenu }) => {
       case 1:
         return allMenuItems;
       case 2:
+        return allMenuItems.filter(item => !['4', '9'].includes(item.key));
       case 5:
         return allMenuItems.filter(item => item.key !== '4');
       case 3:
         return allMenuItems.filter(item => ['1', '2', '3', '7', '5'].includes(item.key));
       case 4:
-        return allMenuItems.filter(item => item.key === '4');
-      default:
+        return allMenuItems.filter(item => ['4', '9'].includes(item.key));
+        default:
         return [];
     }
   };

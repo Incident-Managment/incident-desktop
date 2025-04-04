@@ -8,6 +8,7 @@ import MainLayout from '../../components/Dashboard/MainLayout';
 import UserManagment from './UsersManagment';
 import Production from './Production';
 import Reports from './Reports';
+import Companies from './Companies';
 import UsersByCompany from './UsersByCompany';
 import NotFound from '../NotFound';
 
@@ -23,7 +24,8 @@ const DashboardRoutes = () => {
           <Route path="production" element={<Production />} />
           <Route path="Reports" element={<Reports />} />
           <Route path="users-by-company" element={<UsersByCompany />} />
-          <Route path="*" element={<NotFound />} /> {/* Catch-all route */}
+          <Route path="companies" element={<Companies />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
   );

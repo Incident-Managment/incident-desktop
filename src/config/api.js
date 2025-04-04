@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = 'https://back.incidentstream.cloud/api/';
+export const baseURL = 'http://localhost:3000/api/';
 
 export const fetchData = async (endpoint) => {
   try {
@@ -21,3 +21,13 @@ export const postData = async (endpoint, data) => {
     throw error;
   }
 };
+
+export const putData = async (endpoint, data) => {
+  try {
+    const response = await axios.put(`${baseURL}${endpoint}`, data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating data:', error);
+    throw error;
+  }
+}

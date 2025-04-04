@@ -86,6 +86,12 @@ const UserManagement = () => {
       ...getColumnSearchProps('name'),
     },
     {
+      title: 'Company',
+      dataIndex: ['company', 'name'],
+      key: 'company',
+      render: (text) => <span>{text}</span>,
+    },
+    {
       title: 'Correo Electrónico',
       dataIndex: 'email',
       key: 'email',
@@ -134,7 +140,7 @@ const UserManagement = () => {
   return (
     <Space direction="vertical" size="middle" style={{ width: '100%' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Title level={2}>Gestión de Usuarios</Title>
+        <Title>Gestión de Usuarios</Title>
         <Button type="primary" icon={<Plus size={16} />} onClick={() => setIsCreateModalOpen(true)}>
           Nuevo Usuario
         </Button>

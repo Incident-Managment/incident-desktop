@@ -7,7 +7,6 @@ const { Paragraph, Text } = Typography
 
 export default function NotFound() {
   return (
-    <Layout className="min-h-screen bg-white">
       <Content className="flex items-center justify-center p-4">
         <Result
           status="404"
@@ -34,6 +33,5 @@ export default function NotFound() {
           }
         />
       </Content>
-    </Layout>
   )
 }
