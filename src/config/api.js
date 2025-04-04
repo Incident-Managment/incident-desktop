@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const baseURL = 'http://localhost:3000/api/';
+export const baseURL = 'https://back.incidentstream.cloud/api/';
 
 export const fetchData = async (endpoint) => {
   try {
