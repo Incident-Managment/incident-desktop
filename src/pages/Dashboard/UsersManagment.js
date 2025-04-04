@@ -120,7 +120,10 @@ const UserManagement = () => {
       title: 'Fecha de Creación',
       dataIndex: 'creation_date',
       key: 'creation_date',
-      render: (text) => formatDate(text),
+      render: (text) => {
+        const adjustedDate = new Date(new Date(text).getTime() - 7 * 60 * 60 * 1000);
+        return formatDate(adjustedDate);
+      },
       sorter: (a, b) => new Date(a.creation_date) - new Date(b.creation_date),
     },
     {
