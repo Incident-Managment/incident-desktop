@@ -118,7 +118,7 @@ const MainLayout = () => {
             </Title>
           </Tooltip>
           <div css={css`display: flex; align-items: center;`}>
-            <Popover content={popoverContent} title="User Info">
+            <Popover content={popoverContent} title="Info">
               <Avatar
                 size={40}
                 css={css`background-color: #1890ff; cursor: pointer; margin-right: 16px;`}
